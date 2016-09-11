@@ -15,6 +15,7 @@ import (
 const CmdArtifactory = "rt"
 const CmdBintray = "bt"
 const CmdMissionControl = "mc"
+const CmdXray = "xr"
 
 var ExitCodeError ExitCode = ExitCode{1}
 var ExitCodeWarning ExitCode = ExitCode{2}
@@ -118,7 +119,7 @@ func GetLogMsgPrefix(threadId int, dryRun bool) string {
 }
 
 func GetVersion() string {
-	return "1.4.1"
+	return "1.4.2"
 }
 
 func GetUserHomeDir() string {
