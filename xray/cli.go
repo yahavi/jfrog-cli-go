@@ -35,7 +35,7 @@ func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags)
 	flags.Url = c.String("url");
 	flags.License = c.String("license-id");
 	if len(flags.License) < 1 || len(flags.Url) < 1 {
-		cliutils.Exit(cliutils.ExitCodeError, "Url and license-id are mandatory arguments.")
+		cliutils.Exit(cliutils.ExitCodeError, "url and license-id are mandatory arguments.")
 	}
 	return
 }
