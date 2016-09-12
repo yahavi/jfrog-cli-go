@@ -24,11 +24,11 @@ func offlineUpdateFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
 			Name:  "from",
-			Usage: "[Optional] Global component database url",
+			Usage: "[Optional] Lower value for update date range in the following format 'YYYY-MM-DD'",
 		},
 		cli.StringFlag{
 			Name:  "to",
-			Usage: "[Optional] Global component database url",
+			Usage: "[Optional] Upper value for update date range in the following format 'YYYY-MM-DD'",
 		},
 		cli.StringFlag{
 			Name:  "license-id",
@@ -46,10 +46,14 @@ func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags,
 	from := c.String("from")
 	to := c.String("to")
 	if len(to) > 0 && len(from) < 1 || len(from) > 0 && len(to) < 1 {
-		cliutils.Exit(cliutils.ExitCodeError, "Both \"from\" and \"to\" arguments are required.")
+		cliutils.Exit(cliutils.ExitCodeError, "Both 'from' and 'to' arguments are required.")
 	}
 	if len(from) > 0 && len(to) > 0 {
 		flags.From, err = dateToMilliseconds(from)
+		cliutils.CheckError(err)
+		if err != nil {
+			return
+		}
 		flags.To, err = dateToMilliseconds(to)
 		cliutils.CheckError(err)
 	}
