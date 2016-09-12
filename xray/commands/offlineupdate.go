@@ -11,14 +11,22 @@ import (
 	"path/filepath"
 	"strings"
 	"strconv"
+	"fmt"
 	"github.com/jfrogdev/jfrog-cli-go/utils/cliutils"
 	"github.com/jfrogdev/jfrog-cli-go/utils/cliutils/logger"
 )
 
 const VULNERABILITY = "__vuln"
 const COMPONENT = "__comp"
+const ONBOARDING_URL = "https://jxray.jfrog.io/api/v1/updates/onboarding"
+const BUNDLES_URL = "https://jxray.jfrog.io/api/v1/updates/bundles?from=%v&to=%v"
+
+var updatesUrl = ONBOARDING_URL
 
 func OfflineUpdate(flags *OfflineUpdatesFlags) error {
+	if err := buildUpdatesUrl(flags); err != nil {
+		return err
+	}
 	vulnerabilities, components, err := getFilesList(flags)
 	if err != nil {
 		return err
@@ -46,6 +54,29 @@ func OfflineUpdate(flags *OfflineUpdatesFlags) error {
 	}
 
 	return nil
+}
+
+func buildUpdatesUrl(flags *OfflineUpdatesFlags) (err error) {
+	if flags.From > 0 && flags.To > 0 {
+		if err = validateDates(flags.From, flags.To); err != nil {
+			return
+		}
+		updatesUrl = fmt.Sprintf(BUNDLES_URL, flags.From, flags.To)
+	}
+	return
+}
+func validateDates(from, to int64) (err error) {
+	if from < 0 || to < 0 {
+		err = errors.New("Invalid dates")
+		cliutils.CheckError(err)
+		return
+	}
+	if from > to {
+		err = errors.New("Invalid dates range.")
+		cliutils.CheckError(err)
+		return
+	}
+	return
 }
 
 func getXrayTempDir() (string, error) {
@@ -89,7 +120,7 @@ func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, error) {
 	httpClientDetails := ioutils.HttpClientDetails{
 		Headers: headers,
 	}
-	resp, body, _, err := ioutils.SendGet(flags.Url, false, httpClientDetails)
+	resp, body, _, err := ioutils.SendGet(updatesUrl, false, httpClientDetails)
 	if resp.StatusCode != 200 {
 		err := errors.New("xray response: " + resp.Status)
 		cliutils.CheckError(err)
@@ -110,16 +141,6 @@ func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, error) {
 		}
 	}
 	return vulnerabilities, components, nil
-}
-
-type OfflineUpdatesFlags struct {
-	License string
-	Url     string
-}
-
-type FilesList struct {
-	Last_update int64
-	Urls        []string
 }
 
 func zipFolderFiles(source, target string) (err error) {
@@ -178,4 +199,15 @@ func zipFolderFiles(source, target string) (err error) {
 		return
 	})
 	return
+}
+
+type OfflineUpdatesFlags struct {
+	License string
+	From    int64
+	To      int64
+}
+
+type FilesList struct {
+	Last_update int64
+	Urls        []string
 }

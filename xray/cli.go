@@ -3,8 +3,11 @@ package xray
 import (
 	"github.com/codegangsta/cli"
 	"github.com/jfrogdev/jfrog-cli-go/xray/commands"
+	"time"
 	"github.com/jfrogdev/jfrog-cli-go/utils/cliutils"
 )
+
+const DATE_FORMAT = "2006-01-02"
 
 func GetCommands() []cli.Command {
 	return []cli.Command{
@@ -20,8 +23,12 @@ func GetCommands() []cli.Command {
 func offlineUpdateFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
-			Name:  "url",
-			Usage: "[Mandatory] Global component database url",
+			Name:  "from",
+			Usage: "[Optional] Global component database url",
+		},
+		cli.StringFlag{
+			Name:  "to",
+			Usage: "[Optional] Global component database url",
 		},
 		cli.StringFlag{
 			Name:  "license-id",
@@ -30,19 +37,41 @@ func offlineUpdateFlags() []cli.Flag {
 	}
 }
 
-func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags) {
+func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags, err error) {
 	flags = new(commands.OfflineUpdatesFlags)
-	flags.Url = c.String("url");
 	flags.License = c.String("license-id");
-	if len(flags.License) < 1 || len(flags.Url) < 1 {
-		cliutils.Exit(cliutils.ExitCodeError, "url and license-id are mandatory arguments.")
+	if len(flags.License) < 1 {
+		cliutils.Exit(cliutils.ExitCodeError, "license-id is a mandatory argument.")
+	}
+	from := c.String("from")
+	to := c.String("to")
+	if len(to) > 0 && len(from) < 1 || len(from) > 0 && len(to) < 1 {
+		cliutils.Exit(cliutils.ExitCodeError, "Both \"from\" and \"to\" arguments are required.")
+	}
+	if len(from) > 0 && len(to) > 0 {
+		flags.From, err = dateToMilliseconds(from)
+		flags.To, err = dateToMilliseconds(to)
+		cliutils.CheckError(err)
 	}
 	return
 }
 
+func dateToMilliseconds(date string) (dateInMillisecond int64, err error) {
+	t, err := time.Parse(DATE_FORMAT, date)
+	if err != nil {
+		cliutils.CheckError(err)
+		return
+	}
+	dateInMillisecond = t.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))
+	return
+}
+
 func offlineUpdates(c *cli.Context) {
-	offlineUpdateFlags := getOfflineUpdatesFlag(c)
-	err := commands.OfflineUpdate(offlineUpdateFlags)
+	offlineUpdateFlags, err := getOfflineUpdatesFlag(c)
+	if err != nil {
+		cliutils.Exit(cliutils.ExitCodeError, err.Error())
+	}
+	err = commands.OfflineUpdate(offlineUpdateFlags)
 	if err != nil {
 		cliutils.Exit(cliutils.ExitCodeError, err.Error())
 	}
