@@ -28,7 +28,8 @@ func OfflineUpdate(flags *OfflineUpdatesFlags) error {
 	if err := buildUpdatesUrl(flags); err != nil {
 		return err
 	}
-	vulnerabilities, components, err := getFilesList(flags)
+	vulnerabilities, components, last_update, err := getFilesList(flags)
+	zipSuffix := "_" + strconv.FormatInt(last_update, 10)
 	if err != nil {
 		return err
 	}
@@ -38,7 +39,7 @@ func OfflineUpdate(flags *OfflineUpdatesFlags) error {
 	}
 	if len(vulnerabilities) > 0 {
 		logger.Logger.Info("Downloading vulnerabilities...")
-		if err := saveData(xrayTempDir, "vuln", "", vulnerabilities); err != nil {
+		if err := saveData(xrayTempDir, "vuln", zipSuffix, "", vulnerabilities); err != nil {
 			return err
 		}
 	} else {
@@ -47,7 +48,7 @@ func OfflineUpdate(flags *OfflineUpdatesFlags) error {
 
 	if len(components) > 0 {
 		logger.Logger.Info("Downloading components...")
-		if err := saveData(xrayTempDir, "comp", "", components); err != nil {
+		if err := saveData(xrayTempDir, "comp", zipSuffix, "", components); err != nil {
 			return err
 		}
 	} else {
@@ -91,7 +92,7 @@ func getXrayTempDir() (string, error) {
 	return xrayDir, nil
 }
 
-func saveData(xrsyTmpdir, filesPrefix, logMsgPrefix string, urlsList []string) (err error) {
+func saveData(xrsyTmpdir, filesPrefix, zipSuffix, logMsgPrefix string, urlsList []string) (err error) {
 	dataDir, err := ioutil.TempDir(xrsyTmpdir, filesPrefix)
 	if err != nil {
 		return err
@@ -107,7 +108,7 @@ func saveData(xrsyTmpdir, filesPrefix, logMsgPrefix string, urlsList []string) (
 		ioutils.DownloadFile(url, dataDir, fileName, false, ioutils.HttpClientDetails{})
 	}
 	logger.Logger.Info("Zipping files.")
-	err = zipFolderFiles(dataDir, filesPrefix + ".zip")
+	err = zipFolderFiles(dataDir, filesPrefix + zipSuffix + ".zip")
 	if err != nil {
 		return err
 	}
@@ -115,7 +116,7 @@ func saveData(xrsyTmpdir, filesPrefix, logMsgPrefix string, urlsList []string) (
 	return nil
 }
 
-func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, error) {
+func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, int64, error) {
 	logger.Logger.Info("Getting updates...")
 	headers := make(map[string]string)
 	headers["X-Xray-License"] = flags.License
@@ -126,11 +127,11 @@ func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, error) {
 	if resp.StatusCode != 200 {
 		err := errors.New("xray response: " + resp.Status)
 		cliutils.CheckError(err)
-		return nil, nil, err
+		return nil, nil, 0, err
 	}
 	if err != nil {
 		cliutils.CheckError(err)
-		return nil, nil, err
+		return nil, nil, 0, err
 	}
 	var urls FilesList
 	json.Unmarshal(body, &urls)
@@ -142,7 +143,7 @@ func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, error) {
 			components = append(components, v)
 		}
 	}
-	return vulnerabilities, components, nil
+	return vulnerabilities, components, urls.Last_update, nil
 }
 
 func zipFolderFiles(source, target string) (err error) {
