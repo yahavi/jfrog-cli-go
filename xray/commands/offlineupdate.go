@@ -124,12 +124,12 @@ func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, int64, error)
 		Headers: headers,
 	}
 	resp, body, _, err := ioutils.SendGet(updatesUrl, false, httpClientDetails)
-	if resp.StatusCode != 200 {
-		err := errors.New("xray response: " + resp.Status)
+	if err != nil {
 		cliutils.CheckError(err)
 		return nil, nil, 0, err
 	}
-	if err != nil {
+	if resp.StatusCode != 200 {
+		err := errors.New("xray response: " + resp.Status)
 		cliutils.CheckError(err)
 		return nil, nil, 0, err
 	}
