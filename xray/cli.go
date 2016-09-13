@@ -28,11 +28,11 @@ func offlineUpdateFlags() []cli.Flag {
 		},
 		cli.StringFlag{
 			Name:  "from",
-			Usage: "[Optional] From update datein a YYYY-MM-DD format.",
+			Usage: "[Optional] From update date in YYYY-MM-DD format.",
 		},
 		cli.StringFlag{
 			Name:  "to",
-			Usage: "[Optional] To update datein a YYYY-MM-DD format.",
+			Usage: "[Optional] To update date in YYYY-MM-DD format.",
 		},
 	}
 }
