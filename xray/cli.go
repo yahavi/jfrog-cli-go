@@ -23,16 +23,16 @@ func GetCommands() []cli.Command {
 func offlineUpdateFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
+			Name:  "license-id",
+			Usage: "[Mandatory] Xray license ID",
+		},
+		cli.StringFlag{
 			Name:  "from",
-			Usage: "[Optional] Lower value for update date range in the following format 'YYYY-MM-DD'",
+			Usage: "[Optional] From update datein a YYYY-MM-DD format.",
 		},
 		cli.StringFlag{
 			Name:  "to",
-			Usage: "[Optional] Upper value for update date range in the following format 'YYYY-MM-DD'",
-		},
-		cli.StringFlag{
-			Name:  "license-id",
-			Usage: "[Mandatory] Xray license ID",
+			Usage: "[Optional] To update datein a YYYY-MM-DD format.",
 		},
 	}
 }
@@ -41,12 +41,15 @@ func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags,
 	flags = new(commands.OfflineUpdatesFlags)
 	flags.License = c.String("license-id");
 	if len(flags.License) < 1 {
-		cliutils.Exit(cliutils.ExitCodeError, "license-id is a mandatory argument.")
+		cliutils.Exit(cliutils.ExitCodeError, "The --license-id option is mandatory")
 	}
 	from := c.String("from")
 	to := c.String("to")
-	if len(to) > 0 && len(from) < 1 || len(from) > 0 && len(to) < 1 {
-		cliutils.Exit(cliutils.ExitCodeError, "Both 'from' and 'to' arguments are required.")
+	if len(to) > 0 && len(from) < 1 {
+		cliutils.Exit(cliutils.ExitCodeError, "The --from option is mandatory, when the --to option is sent.")
+	}
+	if len(from) > 0 && len(to) < 1 {
+	    cliutils.Exit(cliutils.ExitCodeError, "The --to option is mandatory, when the --from option is sent.")
 	}
 	if len(from) > 0 && len(to) > 0 {
 		flags.From, err = dateToMilliseconds(from)
