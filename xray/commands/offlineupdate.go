@@ -18,8 +18,9 @@ import (
 
 const VULNERABILITY = "__vuln"
 const COMPONENT = "__comp"
-const ONBOARDING_URL = "https://jxray.jfrog.io/api/v1/updates/onboarding"
-const BUNDLES_URL = "https://jxray.jfrog.io/api/v1/updates/bundles?from=%v&to=%v"
+const JXRAY_BASR_URL = "https://jxray.jfrog.io/api/v1/updates/"
+const ONBOARDING_URL = JXRAY_BASR_URL + "onboarding"
+const BUNDLES_URL = JXRAY_BASR_URL + "bundles?from=%v&to=%v"
 
 var updatesUrl = ONBOARDING_URL
 
@@ -65,6 +66,7 @@ func buildUpdatesUrl(flags *OfflineUpdatesFlags) (err error) {
 	}
 	return
 }
+
 func validateDates(from, to int64) (err error) {
 	if from < 0 || to < 0 {
 		err = errors.New("Invalid dates")
