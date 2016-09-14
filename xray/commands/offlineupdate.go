@@ -29,10 +29,10 @@ func OfflineUpdate(flags *OfflineUpdatesFlags) error {
 		return err
 	}
 	vulnerabilities, components, last_update, err := getFilesList(flags)
-	zipSuffix := "_" + strconv.FormatInt(last_update, 10)
 	if err != nil {
 		return err
 	}
+	zipSuffix := "_" + strconv.FormatInt(last_update, 10)
 	xrayTempDir, err := getXrayTempDir()
 	if err != nil {
 		return err
@@ -129,7 +129,7 @@ func getFilesList(flags *OfflineUpdatesFlags) ([]string, []string, int64, error)
 		return nil, nil, 0, err
 	}
 	if resp.StatusCode != 200 {
-		err := errors.New("xray response: " + resp.Status)
+		err := errors.New("Response: " + resp.Status)
 		cliutils.CheckError(err)
 		return nil, nil, 0, err
 	}
