@@ -281,6 +281,7 @@ func deleteBuild(buildName string) {
 		log.Error(err)
 	}
 	if resp.StatusCode != 200 {
+		log.Error(resp.Status)
 		log.Error(string(body))
 	}
 }
