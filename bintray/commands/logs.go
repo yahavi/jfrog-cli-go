@@ -47,6 +47,6 @@ details *config.BintrayDetails) error {
 		return cliutils.CheckError(errors.New("Bintray response: " + resp.Status))
 	}
 	log.Debug("Bintray response:", resp.Status)
-	log.Info("Downloaded logs.")
+	log.Info("Downloaded log.")
 	return nil
 }

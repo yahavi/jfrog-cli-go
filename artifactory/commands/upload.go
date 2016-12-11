@@ -46,6 +46,9 @@ func Upload(uploadSpec *utils.SpecFiles, flags *UploadFlags) (totalUploaded, tot
 	if err != nil {
 		return 0, 0, err
 	}
+	if totalFailed > 0 {
+		return
+	}
 	if isCollectBuildInfo && !flags.DryRun {
 		populateFunc := func(tempWrapper *utils.ArtifactBuildInfoWrapper) {
 			tempWrapper.Artifacts = toBuildInfoArtifacts(buildArtifacts)
@@ -134,7 +137,7 @@ func uploadWildcard(artifacts []UploadData, flags *UploadFlags) (buildInfoArtifa
 	log.Info("Uploaded", strconv.Itoa(totalUploaded), "artifacts.")
 	totalFailed = size - totalUploaded
 	if totalFailed > 0 {
-		err = cliutils.CheckError(errors.New("Failed uploading " + strconv.Itoa(totalFailed) + " artifacts."))
+		log.Error("Failed uploading", strconv.Itoa(totalFailed), "artifacts.")
 	}
 	return
 }

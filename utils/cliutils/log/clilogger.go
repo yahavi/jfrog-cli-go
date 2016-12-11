@@ -32,10 +32,10 @@ func (logger *CliLogger) setLevel() {
 		logger.logLevel = val;
 	}
 
-	logger.DebugLog = log.New(os.Stdout, "[Debug:] ", 0)
-	logger.InfoLog = log.New(os.Stdout, "[Info:] ", 0)
-	logger.WarnLog = log.New(os.Stdout, "[Warn:] ", 0)
-	logger.ErrorLog = log.New(os.Stdout, "[Error:] ", 0)
+	logger.DebugLog = log.New(os.Stdout, "[Debug] ", 0)
+	logger.InfoLog = log.New(os.Stdout, "[Info] ", 0)
+	logger.WarnLog = log.New(os.Stdout, "[Warn] ", 0)
+	logger.ErrorLog = log.New(os.Stderr, "[Error] ", 0)
 }
 
 func Debug(a ...interface{}) {
