@@ -273,7 +273,7 @@ func getFilesToUpload(localPath, targetPath, packageName string, flags *UploadFl
 		return nil, err
 	}
 
-	spinner := cliutils.NewSpinner("[Info:] Collecting files for upload:", time.Second)
+	spinner := cliutils.NewSpinner("[Info] Collecting files for upload:", time.Second)
 	spinner.Start()
 	var paths []string
 	if flags.Recursive {

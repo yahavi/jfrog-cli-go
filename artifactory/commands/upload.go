@@ -33,7 +33,7 @@ func Upload(uploadSpec *utils.SpecFiles, flags *UploadFlags) (totalUploaded, tot
 		}
 	}
 
-	spinner := cliutils.NewSpinner("[Info:] Collecting files for upload:", time.Second)
+	spinner := cliutils.NewSpinner("[Info] Collecting files for upload:", time.Second)
 	spinner.Start()
 	uploadData, err := buildUploadData(uploadSpec, flags)
 	spinner.Stop()
