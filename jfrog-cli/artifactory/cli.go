@@ -38,6 +38,7 @@ import (
 	"github.com/jfrogdev/jfrog-cli-go/jfrog-cli/docs/artifactory/mvnconfig"
 	"github.com/jfrogdev/jfrog-cli-go/jfrog-cli/docs/artifactory/buildscan"
 	"github.com/jfrogdev/jfrog-cli-go/jfrog-cli/artifactory/utils/spec"
+	"github.com/jfrogdev/jfrog-cli-go/jfrog-cli/docs/artifactory/buildaddsha"
 )
 
 func GetCommands() []cli.Command {
@@ -182,6 +183,18 @@ func GetCommands() []cli.Command {
 			ArgsUsage: common.CreateEnvVars(),
 			Action: func(c *cli.Context) {
 				buildAddGitCmd(c)
+			},
+		},
+		{
+			Name:      "build-add-artifact",
+			Flags:     []cli.Flag{},
+			Aliases:   []string{"baa"},
+			Usage:     buildaddsha.Description,
+			HelpName:  common.CreateUsage("rt build-add-artifact", buildaddsha.Description, buildaddsha.Usage),
+			UsageText: buildaddsha.Arguments,
+			ArgsUsage: common.CreateEnvVars(),
+			Action: func(c *cli.Context) {
+				buildAddArtifactCmd(c)
 			},
 		},
 		{
@@ -1166,6 +1179,16 @@ func buildAddGitCmd(c *cli.Context) {
 		dotGitPath = c.Args().Get(2)
 	}
 	err := commands.BuildAddGit(c.Args().Get(0), c.Args().Get(1), dotGitPath)
+	cliutils.ExitOnErr(err)
+}
+
+func buildAddArtifactCmd(c *cli.Context) {
+	if c.NArg() != 4 {
+		cliutils.PrintHelpAndExitWithError("Wrong number of arguments.", c)
+	}
+	name:= c.Args().Get(2)
+	sha1 := c.Args().Get(3)
+	err := commands.BuildAddArtifact(c.Args().Get(0), c.Args().Get(1),name, sha1)
 	cliutils.ExitOnErr(err)
 }
 
