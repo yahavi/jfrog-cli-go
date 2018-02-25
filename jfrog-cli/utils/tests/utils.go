@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"io"
 )
 
 var RtUrl *string
@@ -180,7 +181,16 @@ func NewJfrogCli(mainFunc func(), prefix, suffix string) *JfrogCli {
 	return &JfrogCli{mainFunc, prefix, suffix}
 }
 
-func (cli *JfrogCli) Exec(args ...string) {
+func (cli *JfrogCli) Exec(args ...string) []byte {
+	previousLog := log.Logger
+	newLog := log.NewLogger()
+
+	// Set new logger with output redirection to buffer
+	outputBuffer := &bytes.Buffer{}
+	logWriter := io.MultiWriter(os.Stdout, outputBuffer)
+	newLog.SetOutputWriter(logWriter)
+	log.SetLogger(newLog)
+
 	spaceSplit := " "
 	os.Args = strings.Split(cli.prefix, spaceSplit)
 	for _, v := range args {
@@ -195,6 +205,13 @@ func (cli *JfrogCli) Exec(args ...string) {
 
 	log.Info("[Command]", strings.Join(os.Args, " "))
 	cli.main()
+	// Restore previous logger
+	log.SetLogger(previousLog)
+
+	output := outputBuffer.Bytes()
+	outputBuffer.Reset()
+	previousLog.Output(string(output))
+	return output
 }
 
 func (cli *JfrogCli) WithSuffix(suffix string) *JfrogCli {

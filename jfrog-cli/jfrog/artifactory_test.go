@@ -2058,45 +2058,31 @@ func TestGitLfsCleanup(t *testing.T) {
 func TestSummaryReport(t *testing.T) {
 	initArtifactoryTest(t)
 
-	previousLog := log.Logger
-	newLog := log.NewLogger()
-
-	// Set new logger with output redirection to buffer
-	buffer := &bytes.Buffer{}
-	newLog.SetOutputWriter(buffer)
-	log.SetLogger(newLog)
-
 	specFile := tests.GetFilePath(tests.SimpleUploadSpec)
-	artifactoryCli.Exec("upload", "--spec="+specFile)
-	verifySummary(t, buffer, 9, 0, previousLog)
+	output := artifactoryCli.Exec("upload", "--spec="+specFile)
+	verifySummary(t, output, 9, 0)
 
-	artifactoryCli.Exec("move", path.Join(tests.Repo1, "*.in"), tests.Repo2+"/")
-	verifySummary(t, buffer, 9, 0, previousLog)
+	output = artifactoryCli.Exec("move", path.Join(tests.Repo1, "*.in"), tests.Repo2+"/")
+	verifySummary(t, output, 9, 0)
 
-	artifactoryCli.Exec("copy", path.Join(tests.Repo2, "*.in"), tests.Repo1+"/")
-	verifySummary(t, buffer, 9, 0, previousLog)
+	output = artifactoryCli.Exec("copy", path.Join(tests.Repo2, "*.in"), tests.Repo1+"/")
+	verifySummary(t, output, 9, 0)
 
-	artifactoryCli.Exec("delete", path.Join(tests.Repo2, "*.in"), "--quiet=true")
-	verifySummary(t, buffer, 9, 0, previousLog)
+	output = artifactoryCli.Exec("delete", path.Join(tests.Repo2, "*.in"), "--quiet=true")
+	verifySummary(t, output, 9, 0)
 
-	artifactoryCli.Exec("set-props", path.Join(tests.Repo1, "*.in"), "prop=val")
-	verifySummary(t, buffer, 9, 0, previousLog)
+	output = artifactoryCli.Exec("set-props", path.Join(tests.Repo1, "*.in"), "prop=val")
+	verifySummary(t, output, 9, 0)
 
 	specFile = tests.GetFilePath(tests.DownloadSpec)
-	artifactoryCli.Exec("download", "--spec="+specFile)
-	verifySummary(t, buffer, 10, 0, previousLog)
+	output = artifactoryCli.Exec("download", "--spec="+specFile)
+	verifySummary(t, output, 10, 0)
 
-	// Restore previous logger
-	log.SetLogger(previousLog)
 	cleanArtifactoryTest()
 }
 
-func verifySummary(t *testing.T, buffer *bytes.Buffer, success, failure int64, logger log.Log) {
-	content := buffer.Bytes()
-	buffer.Reset()
-	logger.Output(string(content))
-
-	status, err := jsonparser.GetString(content, "status")
+func verifySummary(t *testing.T, output []byte, success, failure int64) {
+	status, err := jsonparser.GetString(output, "status")
 	if err != nil {
 		log.Error(err)
 		t.Error(err)
@@ -2105,13 +2091,13 @@ func verifySummary(t *testing.T, buffer *bytes.Buffer, success, failure int64, l
 		t.Error("Summary validation failed, expected: success, got:", status)
 	}
 
-	resultSuccess, err := jsonparser.GetInt(content, "totals", "success")
+	resultSuccess, err := jsonparser.GetInt(output, "totals", "success")
 	if err != nil {
 		log.Error(err)
 		t.Error(err)
 	}
 
-	resultFailure, err := jsonparser.GetInt(content, "totals", "failure")
+	resultFailure, err := jsonparser.GetInt(output, "totals", "failure")
 	if err != nil {
 		log.Error(err)
 		t.Error(err)
