@@ -16,6 +16,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"testing"
+	"github.com/buger/jsonparser"
+	"strings"
 )
 
 var bintrayConfig *config.BintrayDetails
@@ -265,6 +267,96 @@ func TestBintrayVersionDownloads(t *testing.T) {
 	tests.IsExistLocally(expected, paths, t)
 	bintrayCli.Exec("package-delete", packagePath, "--quiet=true")
 	cleanBintrayTest()
+}
+
+func TestEntitlements(t *testing.T) {
+	if *tests.BtOrg == "" {
+		t.Skip("Entitlement test requires Bintray enterprise organization account, skipping...")
+	}
+
+	packageName := "simpleUploadPackage"
+	packagePath := path.Join(bintrayOrganization, tests.BintrayRepo1, packageName)
+	versionName := "1.0"
+	versionPath := packagePath + "/" + versionName
+	createPackageAndVersion(packagePath, versionPath)
+
+	testsCases := []struct {
+		name         string
+		access       string
+		updateAccess string
+		keys         string
+		updateKeys   string
+		path         string
+	}{
+		{"test1", "rw", "r", "key1", "", packagePath},
+		{"test2", "rw", "r", "key1", "", versionPath},
+		{"test3", "rw", "r", "key1", "", bintrayOrganization + "/" + tests.BintrayRepo1},
+		{"test4", "r", "r", "key1,key1-1", "", versionPath},
+	}
+	for _, test := range testsCases {
+		t.Run(test.name, func(t *testing.T) {
+			output := bintrayCli.Exec("entitlements", "create", test.path, "--access="+test.access, "--keys="+test.keys)
+			id := validateEntitlement(t, output, test.access, test.keys)
+			output = bintrayCli.Exec("entitlements", "show", test.path, "--id="+id)
+			validateEntitlement(t, output, test.access, test.keys)
+
+			updateAccess := test.access
+			updateKeys := test.keys
+			if test.updateAccess != "" {
+				updateAccess = test.updateAccess
+			}
+			if test.updateKeys != "" {
+				updateKeys = test.updateKeys
+			}
+
+			output = bintrayCli.Exec("entitlements", "update", test.path, "--id="+id, "--access="+updateAccess, "--keys="+updateKeys)
+			validateEntitlement(t, output, updateAccess, updateKeys)
+
+			bintrayCli.Exec("entitlements", "delete", test.path, "--id="+id)
+		})
+	}
+}
+
+func validateEntitlement(t *testing.T, output []byte, access, keys string) string {
+	id, err := jsonparser.GetString(output, "id")
+	if err != nil {
+		log.Error(err)
+		t.Error(err)
+	}
+	accessRes, err := jsonparser.GetString(output, "access")
+	if err != nil {
+		log.Error(err)
+		t.Error(err)
+	}
+
+	if id == "" {
+		t.Error("Missing Entitlement ID.")
+	}
+
+	if accessRes != access {
+		t.Error("Expecting access field:", access, "got:", accessRes)
+	}
+
+	expectedKeys := strings.Split(keys, ",")
+	i := 0
+	// Could be download_keys or access_keys
+	jsonparser.ArrayEach(output, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		if expectedKeys[i] != string(value) {
+			t.Error("Expecting key:", expectedKeys[i], "got:", string(value))
+		}
+		i++
+	}, "download_keys")
+
+	i = 0
+	// Could be access_keys
+	jsonparser.ArrayEach(output, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		if expectedKeys[i] != string(value) {
+			t.Error("Expecting key:", expectedKeys[i], "got:", string(value))
+		}
+		i++
+	}, "access_keys")
+
+	return id
 }
 
 func CleanBintrayTests() {

@@ -149,14 +149,14 @@ func (es *EntitlementsService) Update(params *Params) error {
 }
 
 func createEntitlementContent(params *Params) ([]byte, error) {
-	var downloadKeys []string
+	var accessKeys []string
 	if params.Keys != "" {
-		downloadKeys = strings.Split(params.Keys, ",")
+		accessKeys = strings.Split(params.Keys, ",")
 	}
 	Config := contentConfig{
-		Access:       params.Access,
-		DownloadKeys: downloadKeys,
-		Path:         params.Path,
+		Access:     params.Access,
+		AccessKeys: accessKeys,
+		Path:       params.Path,
 	}
 	requestContent, err := json.Marshal(Config)
 	if err != nil {
@@ -166,7 +166,7 @@ func createEntitlementContent(params *Params) ([]byte, error) {
 }
 
 type contentConfig struct {
-	Access       string   `json:"access,omitempty"`
-	DownloadKeys []string `json:"download_keys,omitempty"`
-	Path         string   `json:"path,omitempty"`
+	Access     string   `json:"access,omitempty"`
+	AccessKeys []string `json:"access_keys,omitempty"`
+	Path       string   `json:"path,omitempty"`
 }

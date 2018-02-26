@@ -210,7 +210,6 @@ func (cli *JfrogCli) Exec(args ...string) []byte {
 
 	output := outputBuffer.Bytes()
 	outputBuffer.Reset()
-	previousLog.Output(string(output))
 	return output
 }
 
