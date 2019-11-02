@@ -1,4 +1,4 @@
-package shells
+package zsh
 
 import (
 	"fmt"

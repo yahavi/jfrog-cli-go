@@ -1,4 +1,4 @@
-package shells
+package bash
 
 import (
 	"fmt"
