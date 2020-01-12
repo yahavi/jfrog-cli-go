@@ -1,5 +1,7 @@
 #!/bin/bash
 
+go generate ./completion/shells/...
+
 if [ $# -eq 0 ]
   then
 	exe_name="jfrog"

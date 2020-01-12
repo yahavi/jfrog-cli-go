@@ -2,7 +2,8 @@ package completion
 
 import (
 	"github.com/codegangsta/cli"
-	"github.com/jfrog/jfrog-cli-go/completion/shells"
+	bash_completion "github.com/jfrog/jfrog-cli-go/completion/shells/bash"
+	zsh_completion "github.com/jfrog/jfrog-cli-go/completion/shells/zsh"
 	"github.com/jfrog/jfrog-cli-go/docs/common"
 	"github.com/jfrog/jfrog-cli-go/docs/completion/bash"
 	"github.com/jfrog/jfrog-cli-go/docs/completion/zsh"
@@ -16,7 +17,7 @@ func GetCommands() []cli.Command {
 			HelpName:     common.CreateUsage("completion bash", bash.Description, bash.Usage),
 			BashComplete: common.CreateBashCompletionFunc(),
 			Action: func(*cli.Context) {
-				shells.WriteBashCompletionScript()
+				bash_completion.WriteBashCompletionScript()
 			},
 		},
 		{
@@ -25,7 +26,7 @@ func GetCommands() []cli.Command {
 			HelpName:     common.CreateUsage("completion zsh", zsh.Description, zsh.Usage),
 			BashComplete: common.CreateBashCompletionFunc(),
 			Action: func(*cli.Context) {
-				shells.WriteZshCompletionScript()
+				zsh_completion.WriteZshCompletionScript()
 			},
 		},
 	}
