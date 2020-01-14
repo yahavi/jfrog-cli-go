@@ -660,6 +660,10 @@ func getBaseFlags() []cli.Flag {
 		cli.BoolFlag{
 			Name:  "insecure-tls",
 			Usage: "[Default: false] Set to true to skip TLS certificates verification.` `",
+		},
+		cli.BoolFlag{
+			Name:  "stacktrace",
+			Usage: "[Default: false] Set to true to print the error stacktrace for all errors.` `",
 		})
 }
 

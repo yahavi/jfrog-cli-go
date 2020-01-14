@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	gofrogcmd "github.com/jfrog/gofrog/io"
-	"github.com/jfrog/jfrog-cli-go/artifactory/utils"
+	"github.com/jfrog/jfrog-cli-go/utils/cliutils"
 	"github.com/jfrog/jfrog-cli-go/utils/config"
 	"github.com/jfrog/jfrog-client-go/utils/errorutils"
 	"github.com/jfrog/jfrog-client-go/utils/log"
@@ -129,11 +129,11 @@ func (curlCmd *CurlCommand) buildCommandUrl(artifactoryUrl string) (uriIndex int
 // Returns Artifactory details
 func (curlCmd *CurlCommand) GetArtifactoryDetails() (*config.ArtifactoryDetails, error) {
 	// Get --server-id flag value from the command, and remove it.
-	flagIndex, valueIndex, serverIdValue, err := utils.FindFlag("--server-id", curlCmd.arguments)
+	flagIndex, valueIndex, serverIdValue, err := cliutils.FindFlag("--server-id", curlCmd.arguments)
 	if err != nil {
 		return nil, err
 	}
-	utils.RemoveFlagFromCommand(&curlCmd.arguments, flagIndex, valueIndex)
+	cliutils.RemoveFlagFromCommand(&curlCmd.arguments, flagIndex, valueIndex)
 	return config.GetArtifactorySpecificConfig(serverIdValue)
 }
 

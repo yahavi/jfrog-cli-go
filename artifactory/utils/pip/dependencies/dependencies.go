@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 	gofrogcmd "github.com/jfrog/gofrog/io"
-	"github.com/jfrog/jfrog-cli-go/artifactory/utils"
 	"github.com/jfrog/jfrog-cli-go/artifactory/utils/pip"
 	"github.com/jfrog/jfrog-cli-go/utils/config"
 	"github.com/jfrog/jfrog-client-go/artifactory"
+	"github.com/jfrog/jfrog-cli-go/utils/cliutils"
 	"github.com/jfrog/jfrog-client-go/artifactory/buildinfo"
 	serviceutils "github.com/jfrog/jfrog-client-go/artifactory/services/utils"
 	"github.com/jfrog/jfrog-client-go/utils/errorutils"
@@ -63,7 +63,7 @@ func CreateCompatibleExtractor(pythonExecutablePath string, pipArgs []string) (E
 // If found, validate the file exists and return its path.
 func getRequirementsFilePath(args []string) (string, error) {
 	// Get requirements file path from args.
-	_, _, requirementsFilePath, err := utils.FindFlagFirstMatch([]string{"-r", "--requirement"}, args)
+	_, _, requirementsFilePath, err := cliutils.FindFlagFirstMatch([]string{"-r", "--requirement"}, args)
 	if err != nil || requirementsFilePath == "" {
 		// Args don't include a path to requirements file.
 		return "", err

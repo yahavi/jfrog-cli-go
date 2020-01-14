@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/codegangsta/cli"
@@ -14,7 +15,6 @@ import (
 	"github.com/jfrog/jfrog-client-go/utils/log"
 	"github.com/pkg/errors"
 	"github.com/ztrue/tracerr"
-	// goErrors "github.com/go-errors/errors"
 )
 
 // Error modes (how should the application behave when the WrapError function is invoked):
@@ -65,11 +65,13 @@ func PanicOnError(err error) error {
 }
 
 func ExitOnErr(err error) {
+	_, _, printStacktraceStr, _ := FindFlag("stacktrace", os.Args)
+	printStacktrace, _ := strconv.ParseBool(printStacktraceStr)
 	if err, ok := err.(CliError); ok {
-		traceExit(err.ExitCode, err)
+		traceExit(err.ExitCode, err, printStacktrace)
 	}
 	if exitCode := GetExitCode(err, 0, 0, false); exitCode != ExitCodeNoError {
-		traceExit(exitCode, err)
+		traceExit(exitCode, err, printStacktrace)
 	}
 }
 
@@ -118,8 +120,8 @@ func GetExitCode(err error, success, failed int, failNoOp bool) ExitCode {
 	return ExitCodeNoError
 }
 
-func traceExit(exitCode ExitCode, err error) {
-	if err != nil && len(err.Error()) > 0 {
+func traceExit(exitCode ExitCode, err error, printStacktrace bool) {
+	if err != nil && len(err.Error()) > 0 && printStacktrace {
 		tracerr.PrintSourceColor(err)
 	}
 	os.Exit(exitCode.Code)
