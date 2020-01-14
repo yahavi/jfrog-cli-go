@@ -14,11 +14,11 @@ import (
 func GetExecutablePath(executableName string) (string, error) {
 	executablePath, err := exec.LookPath(executableName)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 
 	if executablePath == "" {
-		return "", errorutils.CheckError(errors.New(fmt.Sprintf("Could not find '%s' executable", executableName)))
+		return "", errorutils.WrapError(errors.New(fmt.Sprintf("Could not find '%s' executable", executableName)))
 	}
 
 	log.Debug(fmt.Sprintf("Found %s executable at: %s", executableName, executablePath))

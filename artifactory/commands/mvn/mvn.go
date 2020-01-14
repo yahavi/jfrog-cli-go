@@ -102,7 +102,7 @@ func validateMavenInstallation() error {
 	log.Debug("Checking prerequisites.")
 	mavenHome := os.Getenv(MavenHome)
 	if mavenHome == "" {
-		return errorutils.CheckError(errors.New(MavenHome + " environment variable is not set"))
+		return errorutils.WrapError(errors.New(MavenHome + " environment variable is not set"))
 	}
 	return nil
 }
@@ -133,7 +133,7 @@ func createClassworldsConfig(dependenciesPath string) error {
 	if fileutils.IsPathExists(classworldsPath, false) {
 		return nil
 	}
-	return errorutils.CheckError(ioutil.WriteFile(classworldsPath, []byte(utils.ClassworldsConf), 0644))
+	return errorutils.WrapError(ioutil.WriteFile(classworldsPath, []byte(utils.ClassworldsConf), 0644))
 }
 
 func (mc *MvnCommand) createMvnRunConfig(dependenciesPath string) (*mvnRunConfig, error) {
@@ -146,26 +146,26 @@ func (mc *MvnCommand) createMvnRunConfig(dependenciesPath string) (*mvnRunConfig
 	} else {
 		javaExecPath, err = exec.LookPath("java")
 		if err != nil {
-			return nil, errorutils.CheckError(err)
+			return nil, errorutils.WrapError(err)
 		}
 	}
 
 	mavenHome := os.Getenv("M2_HOME")
 	plexusClassworlds, err := filepath.Glob(filepath.Join(mavenHome, "boot", "plexus-classworlds*.jar"))
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	mavenOpts := os.Getenv("MAVEN_OPTS")
 
 	if len(plexusClassworlds) != 1 {
-		return nil, errorutils.CheckError(errors.New("couldn't find plexus-classworlds-x.x.x.jar in Maven installation path, please check M2_HOME environment variable"))
+		return nil, errorutils.WrapError(errors.New("couldn't find plexus-classworlds-x.x.x.jar in Maven installation path, please check M2_HOME environment variable"))
 	}
 
 	var currentWorkdir string
 	currentWorkdir, err = os.Getwd()
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	var vConfig *viper.Viper

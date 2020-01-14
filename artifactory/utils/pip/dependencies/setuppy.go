@@ -75,7 +75,7 @@ func extractRootDependencies(envDeps map[string]pipDependencyPackage, pkgName st
 	pipDepPkg, ok := envDeps[strings.ToLower(pkgName)]
 	if !ok {
 		// Package not installed.
-		return nil, errorutils.CheckError(errors.New(fmt.Sprintf("Failed receiving root-dependencies for installed package: %s", pkgName)))
+		return nil, errorutils.WrapError(errors.New(fmt.Sprintf("Failed receiving root-dependencies for installed package: %s", pkgName)))
 	}
 
 	// Extract package's root-dependencies.
@@ -106,7 +106,7 @@ func getProjectNameFromFileContent(content []byte) (string, error) {
 	// Find first match of packageNameRegexp.
 	match := packageNameRegexp.FindStringSubmatch(string(content))
 	if len(match) < 2 {
-		return "", errorutils.CheckError(errors.New("Failed extracting package name from content."))
+		return "", errorutils.WrapError(errors.New("Failed extracting package name from content."))
 	}
 
 	return match[1], nil
@@ -123,19 +123,19 @@ func getEgginfoPkginfoContent(pythonExecutablePath, setuppyFilePath string) ([]b
 
 	// Change work-dir to temp, preserve current work-dir when method ends.
 	wd, err := os.Getwd()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 	defer os.Chdir(wd)
 	err = os.Chdir(tempDirPath)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 
 	// Run python egg_info command.
 	egginfoOutput, err := executeEgginfoCommandWithOutput(pythonExecutablePath, setuppyFilePath)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	// Parse egg_info execution output to find PKG-INFO path.
@@ -147,7 +147,7 @@ func getEgginfoPkginfoContent(pythonExecutablePath, setuppyFilePath string) ([]b
 	// Read PKG-INFO file.
 	pkginfoFileExists, err := fileutils.IsFileExists(pkginfoPath, false)
 	if !pkginfoFileExists {
-		return nil, errorutils.CheckError(errors.New(fmt.Sprintf("File 'PKG-INFO' couldn't be found in its designated location: %s", pkginfoPath)))
+		return nil, errorutils.WrapError(errors.New(fmt.Sprintf("File 'PKG-INFO' couldn't be found in its designated location: %s", pkginfoPath)))
 	}
 
 	return ioutil.ReadFile(pkginfoPath)
@@ -163,7 +163,7 @@ func extractPkginfoPathFromCommandOutput(egginfoOutput string) (string, error) {
 
 	matchedOutputLines := pkginfoRegexp.FindAllString(egginfoOutput, -1)
 	if len(matchedOutputLines) != 1 {
-		return "", errorutils.CheckError(errors.New("Failed parsing egg_info command, couldn't find PKG-INFO location."))
+		return "", errorutils.WrapError(errors.New("Failed parsing egg_info command, couldn't find PKG-INFO location."))
 	}
 
 	// Extract path from matched line.

@@ -826,7 +826,7 @@ func isExclusivelyExistLocally(expected, actual []string, t *testing.T) error {
 func TestArtifactorySelfSignedCert(t *testing.T) {
 	initArtifactoryTest(t)
 	tempDirPath, err := ioutil.TempDir("", "jfrog.cli.test.")
-	err = errorutils.CheckError(err)
+	err = errorutils.WrapError(err)
 	if err != nil {
 		t.Error(err)
 	}
@@ -899,7 +899,7 @@ func TestArtifactorySelfSignedCert(t *testing.T) {
 func TestArtifactoryClientCert(t *testing.T) {
 	initArtifactoryTest(t)
 	tempDirPath, err := ioutil.TempDir("", "jfrog.cli.test.")
-	err = errorutils.CheckError(err)
+	err = errorutils.WrapError(err)
 	if err != nil {
 		t.Error(err)
 	}

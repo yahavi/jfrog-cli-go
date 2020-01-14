@@ -142,7 +142,7 @@ func (cc *ConfigCommand) prepareConfigurationData() ([]*config.ArtifactoryDetail
 	if cc.defaultDetails == nil {
 		cc.defaultDetails, err = config.GetDefaultConfiguredArtifactoryConf(configurations)
 		if err != nil {
-			return configurations, errorutils.CheckError(err)
+			return configurations, errorutils.WrapError(err)
 		}
 	}
 
@@ -223,7 +223,7 @@ func readAccessTokenFromConsole(details *config.ArtifactoryDetails) error {
 	print("Access token (Leave blank for username and password/API key): ")
 	byteToken, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	// New-line required after the access token input:
 	fmt.Println()
@@ -408,7 +408,7 @@ func Use(serverId string) error {
 		log.Info(fmt.Sprintf("Using server ID '%s' (%s).", serverFound.ServerId, serverFound.Url))
 		return nil
 	}
-	return errorutils.CheckError(errors.New(fmt.Sprintf("Could not find a server with ID '%s'.", serverId)))
+	return errorutils.WrapError(errors.New(fmt.Sprintf("Could not find a server with ID '%s'.", serverId)))
 }
 
 func ClearConfig(interactive bool) {
@@ -450,7 +450,7 @@ func (cc *ConfigCommand) encryptPassword() error {
 func checkSingleAuthMethod(details *config.ArtifactoryDetails) error {
 	boolArr := []bool{details.User != "" && details.Password != "", details.ApiKey != "", fileutils.IsSshUrl(details.Url), details.AccessToken != ""}
 	if cliutils.SumTrueValues(boolArr) > 1 {
-		return errorutils.CheckError(errors.New("Only one authentication method is allowed: Username + Password/API key, RSA Token (SSH) or Access Token."))
+		return errorutils.WrapError(errors.New("Only one authentication method is allowed: Username + Password/API key, RSA Token (SSH) or Access Token."))
 	}
 	return nil
 }

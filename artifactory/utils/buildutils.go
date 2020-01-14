@@ -28,7 +28,7 @@ func GetBuildDir(buildName, buildNumber string) (string, error) {
 	encodedDirName := base64.StdEncoding.EncodeToString([]byte(buildName + "_" + buildNumber))
 	buildsDir := filepath.Join(cliutils.GetCliPersistentTempDirPath(), BuildTempPath, encodedDirName)
 	err := os.MkdirAll(buildsDir, 0777)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return "", err
 	}
 	return buildsDir, nil
@@ -53,7 +53,7 @@ func getPartialsBuildDir(buildName, buildNumber string) (string, error) {
 	}
 	buildDir = filepath.Join(buildDir, "partials")
 	err = os.MkdirAll(buildDir, 0777)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return "", err
 	}
 	return buildDir, nil
@@ -61,12 +61,12 @@ func getPartialsBuildDir(buildName, buildNumber string) (string, error) {
 
 func saveBuildData(action interface{}, buildName, buildNumber string) error {
 	b, err := json.Marshal(&action)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	var content bytes.Buffer
 	err = json.Indent(&content, b, "", "  ")
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	dirPath, err := getPartialsBuildDir(buildName, buildNumber)
@@ -85,12 +85,12 @@ func saveBuildData(action interface{}, buildName, buildNumber string) error {
 
 func SaveBuildInfo(buildName, buildNumber string, buildInfo *buildinfo.BuildInfo) error {
 	b, err := json.Marshal(buildInfo)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	var content bytes.Buffer
 	err = json.Indent(&content, b, "", "  ")
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	dirPath, err := GetBuildDir(buildName, buildNumber)
@@ -99,12 +99,12 @@ func SaveBuildInfo(buildName, buildNumber string, buildInfo *buildinfo.BuildInfo
 	}
 	log.Debug("Creating temp build file at: " + dirPath)
 	tempFile, err := ioutil.TempFile(dirPath, "temp")
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	defer tempFile.Close()
 	_, err = tempFile.Write([]byte(content.String()))
-	return errorutils.CheckError(err)
+	return errorutils.WrapError(err)
 }
 
 func SaveBuildGeneralDetails(buildName, buildNumber string) error {
@@ -127,15 +127,15 @@ func SaveBuildGeneralDetails(buildName, buildNumber string) error {
 	}
 	b, err := json.Marshal(&meta)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	var content bytes.Buffer
 	err = json.Indent(&content, b, "", "  ")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	err = ioutil.WriteFile(detailsFilePath, []byte(content.String()), 0600)
-	return errorutils.CheckError(err)
+	return errorutils.WrapError(err)
 }
 
 type populatePartialBuildInfo func(partial *buildinfo.Partial)
@@ -235,7 +235,7 @@ func RemoveBuildDir(buildName, buildNumber string) error {
 		return err
 	}
 	if exists {
-		return errorutils.CheckError(os.RemoveAll(tempDirPath))
+		return errorutils.WrapError(os.RemoveAll(tempDirPath))
 	}
 	return nil
 }

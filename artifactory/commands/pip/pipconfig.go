@@ -38,19 +38,19 @@ func CreateBuildConfig(global bool) error {
 	configResult.ConfigType = utils.Pip.String()
 	configResult.Resolver.ServerId, vConfig, err = prompt.ReadServerId()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	configResult.Resolver.Repo, err = prompt.ReadRepo("Set repository for dependencies resolution (press Tab for options): ", vConfig, utils.LOCAL, utils.VIRTUAL)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	resBytes, err := yaml.Marshal(&configResult)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	err = ioutil.WriteFile(configFilePath, resBytes, 0644)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Info("Pip build config successfully created.")
 

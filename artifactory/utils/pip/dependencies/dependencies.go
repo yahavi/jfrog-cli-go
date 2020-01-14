@@ -56,7 +56,7 @@ func CreateCompatibleExtractor(pythonExecutablePath string, pipArgs []string) (E
 	}
 
 	// Couldn't resolve requirements file or setup.py.
-	return nil, errorutils.CheckError(errors.New("Could not find installation file for pip command, the command must include '--requirement' or be executed from within the directory containing the 'setup.py' file."))
+	return nil, errorutils.WrapError(errors.New("Could not find installation file for pip command, the command must include '--requirement' or be executed from within the directory containing the 'setup.py' file."))
 }
 
 // Look for 'requirements' flag in command args.
@@ -75,7 +75,7 @@ func getRequirementsFilePath(args []string) (string, error) {
 		return "", err
 	}
 	if !validPath {
-		return "", errorutils.CheckError(errors.New(fmt.Sprintf("Could not find requirements file at provided location: %s", requirementsFilePath)))
+		return "", errorutils.WrapError(errors.New(fmt.Sprintf("Could not find requirements file at provided location: %s", requirementsFilePath)))
 	}
 
 	// Return absolute path.
@@ -86,7 +86,7 @@ func getRequirementsFilePath(args []string) (string, error) {
 // If found, return its absolute path.
 func getSetuppyFilePath() (string, error) {
 	wd, err := os.Getwd()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return "", err
 	}
 
@@ -97,7 +97,7 @@ func getSetuppyFilePath() (string, error) {
 		return "", err
 	}
 	if !validPath {
-		return "", errorutils.CheckError(errors.New(fmt.Sprintf("Could not find setup.py file in current directory: %s", wd)))
+		return "", errorutils.WrapError(errors.New(fmt.Sprintf("Could not find setup.py file in current directory: %s", wd)))
 	}
 
 	return filePath, nil
@@ -111,7 +111,7 @@ func BuildPipDependencyMap(pythonExecPath string) (map[string]pipDependencyPacka
 
 	pipDependencyMapScriptPath, err := GetDepTreeScriptPath()
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	// Execute the python pip-dependency-map script.
@@ -127,10 +127,10 @@ func BuildPipDependencyMap(pythonExecPath string) (map[string]pipDependencyPacka
 	}()
 	data, err := ioutil.ReadAll(pipeReader)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	if pythonErr != nil {
-		return nil, errorutils.CheckError(pythonErr)
+		return nil, errorutils.WrapError(pythonErr)
 	}
 
 	// Parse the result.
@@ -142,7 +142,7 @@ func parsePipDependencyMapOutput(data []byte) (map[string]pipDependencyPackage, 
 	// Parse into array.
 	packages := make([]pipDependencyPackage, 0)
 	if err := json.Unmarshal(data, &packages); err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	// Create packages map.
@@ -249,16 +249,16 @@ func GetDepTreeScriptPath() (string, error) {
 func writeScriptIfNeeded(targetDirPath, scriptName string) error {
 	scriptPath := path.Join(targetDirPath, scriptName)
 	exists, err := fileutils.IsFileExists(scriptPath, false)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	if !exists {
 		err = os.MkdirAll(targetDirPath, os.ModeDir|os.ModePerm)
-		if errorutils.CheckError(err) != nil {
+		if errorutils.WrapError(err) != nil {
 			return err
 		}
 		err = ioutil.WriteFile(scriptPath, pipDepTreeContent, os.ModePerm)
-		if errorutils.CheckError(err) != nil {
+		if errorutils.WrapError(err) != nil {
 			return err
 		}
 	}
@@ -333,7 +333,7 @@ func getDependencyChecksumFromArtifactory(servicesManager *artifactory.Artifacto
 
 	parsedResult := new(aqlResult)
 	err = json.Unmarshal(result, parsedResult)
-	if err = errorutils.CheckError(err); err != nil {
+	if err = errorutils.WrapError(err); err != nil {
 		return nil, err
 	}
 	if len(parsedResult.Results) == 0 {

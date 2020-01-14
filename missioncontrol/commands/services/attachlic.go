@@ -24,7 +24,7 @@ func AttachLic(service_name string, flags *AttachLicFlags) error {
 		Deploy:           flags.Deploy}
 	requestContent, err := json.Marshal(postContent)
 	if err != nil {
-		return errorutils.CheckError(errors.New("Failed to marshal json. " + cliutils.GetDocumentationMessage()))
+		return errorutils.WrapError(errors.New("Failed to marshal json. " + cliutils.GetDocumentationMessage()))
 	}
 	missionControlUrl := flags.MissionControlDetails.Url + "api/v3/attach_lic/buckets/" + flags.BucketId
 	httpClientDetails := utils.GetMissionControlHttpClientDetails(flags.MissionControlDetails)
@@ -40,7 +40,7 @@ func AttachLic(service_name string, flags *AttachLicFlags) error {
 		if flags.LicensePath != "" {
 			os.Remove(flags.LicensePath)
 		}
-		return errorutils.CheckError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
+		return errorutils.WrapError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
 	}
 	log.Debug("Mission Control response: " + resp.Status)
 
@@ -53,7 +53,7 @@ func AttachLic(service_name string, flags *AttachLicFlags) error {
 	// Extract license from response
 	var licenseKey licenseKey
 	err = json.Unmarshal(body, &licenseKey)
-	err = errorutils.CheckError(err)
+	err = errorutils.WrapError(err)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func prepareLicenseFile(filepath string, overrideFile bool) (err error) {
 		return
 	}
 	if dir {
-		err = errorutils.CheckError(errors.New(filepath + " is a directory."))
+		err = errorutils.WrapError(errors.New(filepath + " is a directory."))
 		if err != nil {
 			return
 		}
@@ -89,7 +89,7 @@ func prepareLicenseFile(filepath string, overrideFile bool) (err error) {
 		return
 	}
 	if !overrideFile && exists {
-		err = errorutils.CheckError(errors.New("File already exist, in case you wish to override the file use --override flag"))
+		err = errorutils.WrapError(errors.New("File already exist, in case you wish to override the file use --override flag"))
 		if err != nil {
 			return
 		}
@@ -100,7 +100,7 @@ func prepareLicenseFile(filepath string, overrideFile bool) (err error) {
 		os.MkdirAll(directory, 0700)
 	}
 	err = ioutil.WriteFile(filepath, nil, 0777)
-	err = errorutils.CheckError(err)
+	err = errorutils.WrapError(err)
 	return
 }
 
@@ -109,7 +109,7 @@ func saveLicense(filepath string, content []byte) (err error) {
 		return
 	}
 	err = ioutil.WriteFile(filepath, content, 0777)
-	err = errorutils.CheckError(err)
+	err = errorutils.WrapError(err)
 	return
 }
 

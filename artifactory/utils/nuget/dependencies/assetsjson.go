@@ -53,13 +53,13 @@ func (extractor *assetsExtractor) new(projectName, projectRoot string) (Extracto
 	assetsFilePath := filepath.Join(projectRoot, assetsFilePath)
 	content, err := ioutil.ReadFile(assetsFilePath)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	assets := &assets{}
 	err = json.Unmarshal(content, assets)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	newExtractor.assets = assets
 	return newExtractor, nil
@@ -111,7 +111,7 @@ func (assets *assets) getAllDependencies() (map[string]*buildinfo.Dependency, er
 				log.Warn("The file", nupkgFilePath, "doesn't exist in the NuGet cache directory but it does exist as a target in the assets files. Skipping adding this file to the build info.")
 				continue
 			}
-			return nil, errorutils.CheckError(errors.New("The file " + nupkgFilePath + " doesn't exist in the NuGet cache directory."))
+			return nil, errorutils.WrapError(errors.New("The file " + nupkgFilePath + " doesn't exist in the NuGet cache directory."))
 		}
 		fileDetails, err := fileutils.GetFileDetails(nupkgFilePath)
 		if err != nil {
@@ -176,7 +176,7 @@ func (library *library) getNupkgFileName() (string, error) {
 			return strings.TrimSuffix(fileName, ".sha512"), nil
 		}
 	}
-	return "", errorutils.CheckError(fmt.Errorf("Could not find nupkg file name for: %s", library.Path))
+	return "", errorutils.WrapError(fmt.Errorf("Could not find nupkg file name for: %s", library.Path))
 }
 
 type project struct {

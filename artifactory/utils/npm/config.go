@@ -22,11 +22,11 @@ func GetConfigList(npmFlags []string, executablePath string) ([]byte, error) {
 
 	data, err := ioutil.ReadAll(pipeReader)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	if npmError != nil {
-		return nil, errorutils.CheckError(npmError)
+		return nil, errorutils.WrapError(npmError)
 	}
 	return data, nil
 }

@@ -23,7 +23,7 @@ func (setProps *SetPropsCommand) CommandName() string {
 
 func (setProps *SetPropsCommand) Run() error {
 	rtDetails, err := setProps.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	servicesManager, err := createPropsServiceManager(setProps.threads, rtDetails)

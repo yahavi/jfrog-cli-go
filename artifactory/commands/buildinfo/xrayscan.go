@@ -64,7 +64,7 @@ func (bsc *BuildScanCommand) Run() error {
 
 	var scanResults scanResult
 	err = json.Unmarshal(result, &scanResults)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 
@@ -74,7 +74,7 @@ func (bsc *BuildScanCommand) Run() error {
 	// Check if should fail build
 	if bsc.failBuild && scanResults.Summary.FailBuild {
 		bsc.buildFailed = true
-		return errorutils.CheckError(errors.New(scanResults.Summary.Message))
+		return errorutils.WrapError(errors.New(scanResults.Summary.Message))
 	}
 
 	return err

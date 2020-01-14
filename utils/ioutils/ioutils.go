@@ -23,7 +23,7 @@ func ReadCredentialsFromConsole(details, savedDetails cliutils.Credentials, allo
 	if details.GetPassword() == "" {
 		print("Password/API key: ")
 		bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
-		err = errorutils.CheckError(err)
+		err = errorutils.WrapError(err)
 		if err != nil {
 			return err
 		}
@@ -53,21 +53,21 @@ func ScanFromConsole(caption string, scanInto *string, defaultValue string) {
 func CopyFile(src, dst string, fileMode os.FileMode) error {
 	from, err := os.Open(src)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	defer from.Close()
 
 	to, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE, fileMode)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	defer to.Close()
 
 	if _, err = io.Copy(to, from); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
-	return errorutils.CheckError(os.Chmod(dst, fileMode))
+	return errorutils.WrapError(os.Chmod(dst, fileMode))
 }
 
 func DoubleWinPathSeparator(filePath string) string {

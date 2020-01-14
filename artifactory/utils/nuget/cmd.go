@@ -9,7 +9,7 @@ import (
 func NewNugetCmd() (*Cmd, error) {
 	execPath, err := exec.LookPath("nuget")
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	return &Cmd{Nuget: execPath}, nil
 }

@@ -43,18 +43,18 @@ func (curlCmd *CurlCommand) Run() error {
 	// Get curl execution path.
 	execPath, err := exec.LookPath("curl")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	curlCmd.SetExecutablePath(execPath)
 
 	// If the command already includes credentials flag, return an error.
 	if curlCmd.isCredentialsFlagExists() {
-		return errorutils.CheckError(errors.New("Curl command must not include credentials flag (-u or --user)."))
+		return errorutils.WrapError(errors.New("Curl command must not include credentials flag (-u or --user)."))
 	}
 
 	// If the command already includes certificates flag, return an error.
 	if curlCmd.rtDetails.ClientCertPath != "" && curlCmd.isCertificateFlagExists() {
-		return errorutils.CheckError(errors.New("Curl command must not include certificate flag (--cert or --key)."))
+		return errorutils.WrapError(errors.New("Curl command must not include certificate flag (--cert or --key)."))
 	}
 
 	// Get target url for the curl command.
@@ -105,13 +105,13 @@ func (curlCmd *CurlCommand) buildCommandUrl(artifactoryUrl string) (uriIndex int
 	// Representing the target API for the Curl command.
 	uriIndex, uriValue = curlCmd.findUriValueAndIndex()
 	if uriIndex == -1 {
-		err = errorutils.CheckError(errors.New("Could not find argument in curl command."))
+		err = errorutils.WrapError(errors.New("Could not find argument in curl command."))
 		return
 	}
 
 	// If user provided full-url, throw an error.
 	if strings.HasPrefix(uriValue, "http://") || strings.HasPrefix(uriValue, "https://") {
-		err = errorutils.CheckError(errors.New("Curl command must not include full-url, but only the REST API URI (e.g '/api/system/ping')."))
+		err = errorutils.WrapError(errors.New("Curl command must not include full-url, but only the REST API URI (e.g '/api/system/ping')."))
 		return
 	}
 

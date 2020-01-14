@@ -65,12 +65,12 @@ func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags,
 	}
 	if len(from) > 0 && len(to) > 0 {
 		flags.From, err = dateToMilliseconds(from)
-		errorutils.CheckError(err)
+		errorutils.WrapError(err)
 		if err != nil {
 			return
 		}
 		flags.To, err = dateToMilliseconds(to)
-		errorutils.CheckError(err)
+		errorutils.WrapError(err)
 	}
 	return
 }
@@ -78,7 +78,7 @@ func getOfflineUpdatesFlag(c *cli.Context) (flags *commands.OfflineUpdatesFlags,
 func dateToMilliseconds(date string) (dateInMillisecond int64, err error) {
 	t, err := time.Parse(DATE_FORMAT, date)
 	if err != nil {
-		errorutils.CheckError(err)
+		errorutils.WrapError(err)
 		return
 	}
 	dateInMillisecond = t.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))

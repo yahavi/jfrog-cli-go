@@ -14,7 +14,7 @@ func RunList(flags, executablePath string) (stdResult, errResult []byte, err err
 	log.Debug("Running npm list command.")
 	splitFlags, err := shellwords.Parse(flags)
 	if err != nil {
-		return nil, nil, errorutils.CheckError(err)
+		return nil, nil, errorutils.WrapError(err)
 	}
 
 	listCmd := createListCommand(executablePath, splitFlags)
@@ -52,7 +52,7 @@ func (listCmd *listCommand) exec() (outData, errData []byte, err error) {
 	wg.Wait()
 	for _, err := range cmdErrors {
 		if err != nil {
-			return outData, errData, errorutils.CheckError(err)
+			return outData, errData, errorutils.WrapError(err)
 		}
 	}
 	return outData, errData, nil

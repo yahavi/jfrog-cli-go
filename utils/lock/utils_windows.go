@@ -24,7 +24,7 @@ func isProcessRunning(pid int) (bool, error) {
 	var exitCode uint32
 	err = syscall.GetExitCodeProcess(process, &exitCode)
 	if err != nil {
-		return false, errorutils.CheckError(err)
+		return false, errorutils.WrapError(err)
 	}
 
 	// 259 - process still alive

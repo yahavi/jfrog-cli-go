@@ -43,7 +43,7 @@ func TestDependenciesCache(t *testing.T) {
 	if err != nil {
 		t.Error("Failed creating dependencies cache: " + err.Error())
 	}
-	cache, err := readCacheAndCheckError()
+	cache, err := readCacheAndWrapError()
 	if err != nil {
 		t.Error("Failed reading dependencies cache: " + err.Error())
 	}
@@ -73,7 +73,7 @@ func TestDependenciesCache(t *testing.T) {
 		t.Error("Failed creating dependencies cache: " + err.Error())
 	}
 
-	cache, err = readCacheAndCheckError()
+	cache, err = readCacheAndWrapError()
 	if err != nil {
 		t.Error("Failed reading dependencies cache: " + err.Error())
 	}
@@ -88,7 +88,7 @@ func TestDependenciesCache(t *testing.T) {
 	}
 }
 
-func readCacheAndCheckError() (cache *DependenciesCache, err error) {
+func readCacheAndWrapError() (cache *DependenciesCache, err error) {
 	cache, err = GetProjectDependenciesCache()
 	if err != nil {
 		return

@@ -58,7 +58,7 @@ func CreateBuildConfig(configFilePath string) error {
 
 	resBytes, err := yaml.Marshal(&configResult)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	err = ioutil.WriteFile(configFilePath, resBytes, 0644)
 	if err != nil {

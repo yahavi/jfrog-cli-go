@@ -41,7 +41,7 @@ func CreateLogFile() (*os.File, error) {
 	fileName := filepath.Join(logDir, "jfrog-cli."+currentTime+"."+strconv.Itoa(pid)+".log")
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	return file, nil
@@ -52,6 +52,6 @@ func CloseLogFile(logFile *os.File) {
 	if logFile != nil {
 		SetDefaultLogger()
 		err := logFile.Close()
-		utils.CheckErrorWithMessage(err, "failed closing the log file")
+		utils.WrapErrorWithMessage(err, "failed closing the log file")
 	}
 }

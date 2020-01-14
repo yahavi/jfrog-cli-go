@@ -10,7 +10,7 @@ import (
 func GetIntFlagValue(c *cli.Context, flagName string, defValue int) (int, error) {
 	if c.IsSet(flagName) {
 		flagIntVal, err := strconv.Atoi(c.String(flagName))
-		err = utils.CheckErrorWithMessage(err, "can't parse "+flagName+" value: "+c.String(flagName))
+		err = utils.WrapErrorWithMessage(err, "can't parse "+flagName+" value: "+c.String(flagName))
 		return flagIntVal, err
 	}
 	return defValue, nil

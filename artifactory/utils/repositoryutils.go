@@ -58,7 +58,7 @@ func execGetRepositories(artDetails auth.ArtifactoryDetails, repoType RepoType) 
 		return repos, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return repos, errorutils.CheckError(errors.New("Artifactory response: " + resp.Status + "\n" + utils.IndentJson(body)))
+		return repos, errorutils.WrapError(errors.New("Artifactory response: " + resp.Status + "\n" + utils.IndentJson(body)))
 	}
 
 	jsonparser.ArrayEach(body, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {

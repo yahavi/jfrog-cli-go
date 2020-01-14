@@ -287,7 +287,7 @@ func (m *gitManager) execGit(args ...string) (string, string, error) {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()
-	errorutils.CheckError(err)
+	errorutils.WrapError(err)
 	return strings.TrimSpace(stdout.String()), strings.TrimSpace(stderr.String()), err
 }
 
@@ -393,7 +393,7 @@ func getRepositoriesNameMap() map[string]string {
 func ReplaceTemplateVariables(path, destPath string) (string, error) {
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 
 	repos := getRepositoriesNameMap()
@@ -403,19 +403,19 @@ func ReplaceTemplateVariables(path, destPath string) (string, error) {
 	if destPath == "" {
 		destPath, err = os.Getwd()
 		if err != nil {
-			return "", errorutils.CheckError(err)
+			return "", errorutils.WrapError(err)
 		}
 		destPath = filepath.Join(destPath, Temp)
 	}
 	err = os.MkdirAll(destPath, 0700)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	specPath := filepath.Join(destPath, filepath.Base(path))
 	log.Info("Creating spec file at:", specPath)
 	err = ioutil.WriteFile(specPath, []byte(content), 0700)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 
 	return specPath, nil

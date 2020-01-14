@@ -13,20 +13,17 @@ import (
 	"github.com/jfrog/jfrog-client-go/utils/io/fileutils"
 	"github.com/jfrog/jfrog-client-go/utils/log"
 	"github.com/pkg/errors"
+	"github.com/ztrue/tracerr"
+	// goErrors "github.com/go-errors/errors"
 )
 
-// Error modes (how should the application behave when the CheckError function is invoked):
+// Error modes (how should the application behave when the WrapError function is invoked):
 type OnError string
 
 var cliTempDir string
 var cliUserAgent string
 
 func init() {
-	// Initialize error handling.
-	if os.Getenv(ErrorHandling) == string(OnErrorPanic) {
-		errorutils.CheckError = PanicOnError
-	}
-
 	// Initialize the temp base-dir path of the CLI executions.
 	cliTempDir = os.Getenv(TempDir)
 	if cliTempDir == "" {
@@ -53,11 +50,11 @@ var ExitCodeBuildScan = ExitCode{3}
 
 type CliError struct {
 	ExitCode
-	ErrorMsg string
+	TraceErr tracerr.Error
 }
 
 func (err CliError) Error() string {
-	return err.ErrorMsg
+	return err.TraceErr.Error()
 }
 
 func PanicOnError(err error) error {
@@ -77,17 +74,23 @@ func ExitOnErr(err error) {
 }
 
 func GetCliError(err error, success, failed int, failNoOp bool) error {
+	var traceError tracerr.Error
 	switch GetExitCode(err, success, failed, failNoOp) {
 	case ExitCodeError:
 		{
-			var errorMessage string
 			if err != nil {
-				errorMessage = err.Error()
+				e, ok := err.(tracerr.Error)
+				if ok {
+					traceError = e
+				} else {
+					traceError = tracerr.CustomError(err, []tracerr.Frame{})
+				}
 			}
-			return CliError{ExitCodeError, errorMessage}
+			return CliError{ExitCodeError, traceError}
 		}
 	case ExitCodeFailNoOp:
-		return CliError{ExitCodeFailNoOp, "No errors, but also no files affected (fail-no-op flag)."}
+		traceError = tracerr.CustomError(errors.New("No errors, but also no files affected (fail-no-op flag)"), []tracerr.Frame{})
+		return CliError{ExitCodeFailNoOp, traceError}
 	default:
 		return nil
 	}
@@ -95,7 +98,8 @@ func GetCliError(err error, success, failed int, failNoOp bool) error {
 
 func ExitBuildScan(failBuild bool, err error) error {
 	if failBuild && err != nil {
-		return CliError{ExitCodeBuildScan, "Build Scan Failed"}
+		traceError := tracerr.CustomError(errors.New("Build Scan Failed"), []tracerr.Frame{})
+		return CliError{ExitCodeBuildScan, traceError}
 	}
 
 	return nil
@@ -116,10 +120,18 @@ func GetExitCode(err error, success, failed int, failNoOp bool) ExitCode {
 
 func traceExit(exitCode ExitCode, err error) {
 	if err != nil && len(err.Error()) > 0 {
-		log.Error(err)
+		tracerr.PrintSourceColor(err)
 	}
 	os.Exit(exitCode.Code)
 }
+
+// func RunCommand(c *cli.Context, cmd func(c *cli.Context) error) error {
+// 	err := cmd(c)
+// 	if (err != nil && c.Bool("stacktrace")) {
+// 		tracerr.PrintSourceColor(err)
+// 	}
+// 	return err
+// }
 
 // Print summary report.
 // The given error will pass through and be returned as is if no other errors are raised.
@@ -131,11 +143,12 @@ func PrintSummaryReport(success, failed int, err error) error {
 		summaryReport.Status = summary.Failure
 	}
 	content, mErr := summaryReport.Marshal()
-	if errorutils.CheckError(mErr) != nil {
+	if errorutils.WrapError(mErr) != nil {
 		log.Error(mErr)
 		return err
 	}
 	log.Output(utils.IndentJson(content))
+
 	return err
 }
 

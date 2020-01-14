@@ -90,7 +90,7 @@ func (uc *UploadCommand) upload() error {
 		return err
 	}
 	rtDetails, err := uc.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	servicesManager, err := utils.CreateUploadServiceManager(rtDetails, uc.uploadConfiguration, certPath, uc.DryRun(), progressBar)
@@ -177,9 +177,8 @@ func getMinChecksumDeploySize() (int64, error) {
 		return 10240, nil
 	}
 	minSize, err := strconv.ParseInt(minChecksumDeploySize, 10, 64)
-	err = errorutils.CheckError(err)
 	if err != nil {
-		return 0, err
+		return 0, errorutils.WrapError(err)
 	}
 	return minSize * 1000, nil
 }

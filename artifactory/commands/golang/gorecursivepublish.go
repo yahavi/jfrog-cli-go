@@ -26,7 +26,7 @@ func NewGoRecursivePublishCommand() *GoRecursivePublishCommand {
 
 func (grp *GoRecursivePublishCommand) Run() error {
 	rtDetails, err := grp.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	serviceManager, err := utils.CreateServiceManager(rtDetails, false)
@@ -49,7 +49,7 @@ func (grp *GoRecursivePublishCommand) Run() error {
 	}
 	gmi := goModInfo{}
 	wd, err := os.Getwd()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return gmi.revert(wd, err)
 	}
 	err = golang.LogGoVersion()
@@ -74,7 +74,7 @@ func (grp *GoRecursivePublishCommand) Run() error {
 	resolverDeployer.SetServiceManager(serviceManager).SetRepo(grp.TargetRepo())
 	goInfo.SetDeployer(resolverDeployer).SetResolver(resolverDeployer)
 	err = gocmd.RecursivePublish(goModEditMessage, goInfo)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		if !modFileExists {
 			log.Debug("Graph failed, preparing to run go mod tidy on the root project since got the following error:", err.Error())
 			err = gmi.prepareAndRunTidyOnFailedGraph(wd, goModEditMessage, goInfo)
@@ -87,7 +87,7 @@ func (grp *GoRecursivePublishCommand) Run() error {
 	}
 
 	err = os.Chdir(wd)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return gmi.revert(wd, err)
 	}
 	return gmi.revert(wd, nil)
@@ -107,10 +107,10 @@ func (gmi *goModInfo) revert(wd string, err error) error {
 	if gmi.shouldRevertModFile {
 		log.Debug("Reverting to original go.mod of the root project")
 		revertErr := ioutil.WriteFile("go.mod", gmi.modFileContent, gmi.modFileStat.Mode())
-		if errorutils.CheckError(revertErr) != nil {
+		if errorutils.WrapError(revertErr) != nil {
 			if err != nil {
 				log.Error(revertErr)
-				return errorutils.CheckError(err)
+				return errorutils.WrapError(err)
 			} else {
 				return revertErr
 			}
@@ -122,11 +122,11 @@ func (gmi *goModInfo) revert(wd string, err error) error {
 func (gmi *goModInfo) prepareModFile(wd, goModEditMessage string) error {
 	err := cmd.RunGoModInit("")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	regExp, err := gocmdutils.GetRegex()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	notEmptyModRegex := regExp.GetNotEmptyModRegex()
 	gmi.modFileContent, gmi.modFileStat, err = cmd.GetFileDetails("go.mod")
@@ -139,7 +139,7 @@ func (gmi *goModInfo) prepareModFile(wd, goModEditMessage string) error {
 	if !packageWithDep.PatternMatched(notEmptyModRegex) {
 		log.Debug("Root mod is empty, preparing to run 'go mod tidy'")
 		err = cmd.RunGoModTidy()
-		if errorutils.CheckError(err) != nil {
+		if errorutils.WrapError(err) != nil {
 			return gmi.revert(wd, err)
 		}
 		gmi.shouldRevertModFile = true
@@ -163,11 +163,11 @@ func (gmi *goModInfo) prepareAndRunTidyOnFailedGraph(wd, goModEditMessage string
 	// Run go mod tidy.
 	err = cmd.RunGoModTidy()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	// Perform collection again after tidy finished successfully.
 	err = gocmd.RecursivePublish(goModEditMessage, goInfo)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return gmi.revert(wd, err)
 	}
 	return nil

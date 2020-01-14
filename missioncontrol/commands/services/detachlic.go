@@ -18,7 +18,7 @@ func DetachLic(service_name string, flags *DetachLicFlags) error {
 		Name: service_name}
 	requestContent, err := json.Marshal(postContent)
 	if err != nil {
-		return errorutils.CheckError(errors.New("Failed to marshal json. " + cliutils.GetDocumentationMessage()))
+		return errorutils.WrapError(errors.New("Failed to marshal json. " + cliutils.GetDocumentationMessage()))
 	}
 	missionControlUrl := flags.MissionControlDetails.Url + "api/v3/detach_lic/buckets/" + bucketId
 	httpClientDetails := utils.GetMissionControlHttpClientDetails(flags.MissionControlDetails)
@@ -31,7 +31,7 @@ func DetachLic(service_name string, flags *DetachLicFlags) error {
 		return err
 	}
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
-		return errorutils.CheckError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
+		return errorutils.WrapError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
 	}
 	log.Debug("Mission Control response: " + resp.Status)
 	return nil

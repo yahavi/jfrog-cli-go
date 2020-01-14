@@ -55,7 +55,7 @@ func (pi *PipInstaller) prepare() (pipExecutablePath, pipIndexUrl string, err er
 func getArtifactoryUrlWithCredentials(rtDetails *config.ArtifactoryDetails, repository string) (string, error) {
 	rtUrl, err := url.Parse(rtDetails.GetUrl())
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 
 	username := rtDetails.GetUser()
@@ -190,7 +190,7 @@ func (pi *PipInstaller) runPipInstallWithLogParsing(pipInstallCmd *PipCmd) error
 
 	// Execute command.
 	_, _, _, err = gofrogcmd.RunCmdWithOutputParser(pipInstallCmd, true, &dependencyNameParser, &dependencyFileParser, &installedPackagesParser)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 

@@ -120,7 +120,7 @@ func downloadFileFromArtifactory(artDetails *config.ArtifactoryDetails, download
 	httpClientDetails := auth.CreateHttpClientDetails()
 	resp, err := client.DownloadFile(downloadFileDetails, "", &httpClientDetails, 3, false)
 	if err == nil && resp.StatusCode != http.StatusOK {
-		err = errorutils.CheckError(errors.New(resp.Status + " received when attempting to download " + downloadUrl))
+		err = errorutils.WrapError(errors.New(resp.Status + " received when attempting to download " + downloadUrl))
 	}
 
 	return err

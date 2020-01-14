@@ -139,11 +139,11 @@ func ReadConfigFile(configPath string, configType ConfigType) (*viper.Viper, err
 
 	f, err := os.Open(configPath)
 	if err != nil {
-		return config, errorutils.CheckError(err)
+		return config, errorutils.WrapError(err)
 	}
 	err = config.ReadConfig(f)
 	if err != nil {
-		return config, errorutils.CheckError(err)
+		return config, errorutils.WrapError(err)
 	}
 
 	return config, nil
@@ -166,18 +166,18 @@ func GetRtDetails(vConfig *viper.Viper) (*config.ArtifactoryDetails, error) {
 
 func CreateBuildInfoPropertiesFile(buildName, buildNumber string, config *viper.Viper, projectType ProjectType) (string, error) {
 	if config.GetString("type") != projectType.String() {
-		return "", errorutils.CheckError(errors.New("Incompatible build config, expected: " + projectType.String() + " got: " + config.GetString("type")))
+		return "", errorutils.WrapError(errors.New("Incompatible build config, expected: " + projectType.String() + " got: " + config.GetString("type")))
 	}
 
 	propertiesPath := filepath.Join(cliutils.GetCliPersistentTempDirPath(), PROPERTIES_TEMP_PATH)
 	err := os.MkdirAll(propertiesPath, 0777)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return "", err
 	}
 	propertiesFile, err := ioutil.TempFile(propertiesPath, PROPERTIES_TEMP_PREFIX)
 	defer propertiesFile.Close()
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	err = setServerDetailsToConfig(RESOLVER_PREFIX, config)
 	if err != nil {
@@ -217,7 +217,7 @@ func CreateBuildInfoPropertiesFile(buildName, buildNumber string, config *viper.
 				_, err = propertiesFile.WriteString(propertyKey + "=" + defaultVal + "\n")
 			}
 			if err != nil {
-				return "", errorutils.CheckError(err)
+				return "", errorutils.WrapError(err)
 			}
 		}
 	}
@@ -231,11 +231,11 @@ func setProxyIfDefined(config *viper.Viper) error {
 	if proxy != "" {
 		url, err := url.Parse(proxy)
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		host, port, err := net.SplitHostPort(url.Host)
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		config.Set(PROXY+HOST, host)
 		config.Set(PROXY+PORT, port)
@@ -254,12 +254,12 @@ func setServerDetailsToConfig(contextPrefix string, vConfig *viper.Viper) error 
 		return err
 	}
 	if artDetails.GetUrl() == "" {
-		return errorutils.CheckError(errors.New("Server ID " + serverId + " URL is required"))
+		return errorutils.WrapError(errors.New("Server ID " + serverId + " URL is required"))
 	}
 	vConfig.Set(contextPrefix+URL, artDetails.GetUrl())
 
 	if artDetails.GetApiKey() != "" {
-		return errorutils.CheckError(errors.New("Server ID " + serverId + " API key authentication is not supported"))
+		return errorutils.WrapError(errors.New("Server ID " + serverId + " API key authentication is not supported"))
 	}
 
 	if artDetails.GetAccessToken() != "" {

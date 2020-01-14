@@ -114,13 +114,13 @@ func (dc *DownloadCommand) Run() error {
 	} else if dc.SyncDeletesPath() != "" {
 		absSyncDeletesPath, err := filepath.Abs(dc.SyncDeletesPath())
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		if _, err = os.Stat(absSyncDeletesPath); err == nil {
 			walkFn := createSyncDeletesWalkFunction(filesInfo)
 			err = fileutils.Walk(dc.SyncDeletesPath(), walkFn, false)
 			if err != nil {
-				return errorutils.CheckError(err)
+				return errorutils.WrapError(err)
 			}
 		} else if os.IsNotExist(err) {
 			log.Info("Sync-deletes path", absSyncDeletesPath, "does not exists.")
@@ -190,14 +190,14 @@ func createSyncDeletesWalkFunction(downloadedFiles []clientutils.FileInfo) fileu
 	return func(path string, info os.FileInfo, err error) error {
 		// Convert path to absolute path
 		path, err = filepath.Abs(path)
-		if errorutils.CheckError(err) != nil {
+		if errorutils.WrapError(err) != nil {
 			return err
 		}
 		// Go over the downloaded files list
 		for _, file := range downloadedFiles {
 			// If the current path is a prefix of a downloaded file - we won't delete it.
 			fileAbsPath, err := filepath.Abs(file.LocalPath)
-			if errorutils.CheckError(err) != nil {
+			if errorutils.WrapError(err) != nil {
 				return err
 			}
 			if strings.HasPrefix(fileAbsPath, path) {
@@ -217,6 +217,6 @@ func createSyncDeletesWalkFunction(downloadedFiles []clientutils.FileInfo) fileu
 			err = os.Remove(path)
 		}
 
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 }

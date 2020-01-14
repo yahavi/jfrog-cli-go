@@ -156,7 +156,7 @@ const sourceName = "JFrogCli"
 func DependencyTreeCmd() error {
 	workspace, err := os.Getwd()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	sol, err := solution.Load(workspace, "")
@@ -174,7 +174,7 @@ func DependencyTreeCmd() error {
 	// Build the tree.
 	content, err := sol.Marshal()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Output(clientutils.IndentJson(content))
 	return nil
@@ -190,7 +190,7 @@ func changeWorkingDir(newWorkingDir string) (string, error) {
 		newWorkingDir, err = os.Getwd()
 	}
 
-	return newWorkingDir, errorutils.CheckError(err)
+	return newWorkingDir, errorutils.WrapError(err)
 }
 
 // Prepares the nuget configuration file within the temp directory
@@ -203,7 +203,7 @@ func (nca *NugetCommandArgs) prepareAndRunCmd(configDirPath string) error {
 	// To prevent NuGet prompting for credentials
 	err = os.Setenv("NUGET_EXE_NO_PROMPT", "true")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	err = nca.prepareConfigFile(cmd, configDirPath)
@@ -249,7 +249,7 @@ func getFlagValueIfExists(cmdFlag string, cmd *nuget.Cmd) (string, error) {
 			continue
 		}
 		if i+1 == len(cmd.CommandFlags) {
-			return "", errorutils.CheckError(errorutils.CheckError(fmt.Errorf(cmdFlag, " flag was provided without value")))
+			return "", errorutils.WrapError(errorutils.WrapError(fmt.Errorf(cmdFlag, " flag was provided without value")))
 		}
 		return cmd.CommandFlags[i+1], nil
 	}
@@ -288,7 +288,7 @@ func (nca *NugetCommandArgs) addNugetAuthenticationToNewConfig(configFile *os.Fi
 func writeToTempConfigFile(cmd *nuget.Cmd, tempDirPath string) (*os.File, error) {
 	configFile, err := ioutil.TempFile(tempDirPath, "jfrog.cli.nuget.")
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	log.Debug("Nuget config file created at:", configFile.Name())
 
@@ -300,7 +300,7 @@ func writeToTempConfigFile(cmd *nuget.Cmd, tempDirPath string) (*os.File, error)
 	content := nuget.ConfigFileTemplate
 	_, err = configFile.WriteString(content)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	return configFile, nil
 }
@@ -345,7 +345,7 @@ func addNugetApiKey(user, password, configFileName string) error {
 func (nca *NugetCommandArgs) getSourceDetails() (sourceURL, user, password string, err error) {
 	var u *url.URL
 	u, err = url.Parse(nca.rtDetails.Url)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return
 	}
 	u.Path = path.Join(u.Path, "api/nuget", nca.repoName)
@@ -355,7 +355,7 @@ func (nca *NugetCommandArgs) getSourceDetails() (sourceURL, user, password strin
 	password = nca.rtDetails.Password
 	// If access-token is defined, extract user from it.
 	rtDetails, err := nca.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return
 	}
 	if rtDetails.AccessToken != "" {
@@ -377,7 +377,7 @@ func (nca *NugetCommandArgs) createNugetCmd() (*nuget.Cmd, error) {
 	if nca.args != "" {
 		c.Command, err = shellwords.Parse(nca.args)
 		if err != nil {
-			return nil, errorutils.CheckError(err)
+			return nil, errorutils.WrapError(err)
 		}
 	}
 
@@ -385,5 +385,5 @@ func (nca *NugetCommandArgs) createNugetCmd() (*nuget.Cmd, error) {
 		c.CommandFlags, err = shellwords.Parse(nca.flags)
 	}
 
-	return c, errorutils.CheckError(err)
+	return c, errorutils.WrapError(err)
 }

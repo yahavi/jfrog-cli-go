@@ -15,7 +15,7 @@ func GetPipConfiguration() (*utils.RepositoryConfig, error) {
 		return nil, err
 	}
 	if !exists {
-		return nil, errorutils.CheckError(fmt.Errorf("Pip Project configuration does not exist."))
+		return nil, errorutils.WrapError(fmt.Errorf("Pip Project configuration does not exist."))
 	}
 	// Read config file.
 	log.Debug("Preparing to read the config file", confFilePath)

@@ -57,7 +57,7 @@ func (pdtc *PipDepTreeCommand) Run() error {
 
 	// If missing dependencies information, fail the execution.
 	if len(missingDeps) > 0 {
-		return errorutils.CheckError(errors.New(fmt.Sprintf("Could not find information for the following packages: %s", strings.Join(missingDeps, ", "))))
+		return errorutils.WrapError(errors.New(fmt.Sprintf("Could not find information for the following packages: %s", strings.Join(missingDeps, ", "))))
 	}
 
 	// Build dependencies tree.
@@ -68,7 +68,7 @@ func (pdtc *PipDepTreeCommand) Run() error {
 	// Output tree json.
 	treeJson, err := json.Marshal(pdtc.DepsTreeRoot)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Output(clientutils.IndentJson(treeJson))
 

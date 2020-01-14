@@ -26,7 +26,6 @@ const (
 	LogLevel        = "JFROG_CLI_LOG_LEVEL"
 	OfferConfig     = "JFROG_CLI_OFFER_CONFIG"
 	HomeDir         = "JFROG_CLI_HOME_DIR"
-	ErrorHandling   = "JFROG_CLI_ERROR_HANDLING"
 	TempDir         = "JFROG_CLI_TEMP_DIR"
 	CI              = "CI"
 	DependenciesDir = "JFROG_CLI_DEPENDENCIES_DIR"

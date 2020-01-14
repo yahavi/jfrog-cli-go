@@ -178,7 +178,7 @@ func (getImageId *getParentId) GetErrWriter() io.WriteCloser {
 func ResolveRegistryFromTag(imageTag string) (string, error) {
 	indexOfFirstSlash := strings.Index(imageTag, "/")
 	if indexOfFirstSlash < 0 {
-		err := errorutils.CheckError(errors.New("Invalid image tag received for pushing to Artifactory - tag does not include a slash."))
+		err := errorutils.WrapError(errors.New("Invalid image tag received for pushing to Artifactory - tag does not include a slash."))
 		return "", err
 	}
 
@@ -300,14 +300,14 @@ func DockerLogin(imageTag string, config *DockerLoginConfig) error {
 
 	indexOfSlash := strings.Index(imageRegistry, "/")
 	if indexOfSlash < 0 {
-		return errorutils.CheckError(errors.New(fmt.Sprintf(DockerLoginFailureMessage, imageRegistry)))
+		return errorutils.WrapError(errors.New(fmt.Sprintf(DockerLoginFailureMessage, imageRegistry)))
 	}
 
 	cmd = &LoginCmd{DockerRegistry: imageRegistry[:indexOfSlash], Username: config.ArtifactoryDetails.User, Password: config.ArtifactoryDetails.Password}
 	err = gofrogcmd.RunCmd(cmd)
 	if err != nil {
 		// Login failed for both attempts
-		return errorutils.CheckError(errors.New(fmt.Sprintf(DockerLoginFailureMessage,
+		return errorutils.WrapError(errors.New(fmt.Sprintf(DockerLoginFailureMessage,
 			fmt.Sprintf("%s, %s", imageRegistry, imageRegistry[:indexOfSlash])) + " " + err.Error()))
 	}
 

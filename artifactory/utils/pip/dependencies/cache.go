@@ -24,20 +24,20 @@ type DependenciesCache struct {
 func GetProjectDependenciesCache() (*DependenciesCache, error) {
 	cache := new(DependenciesCache)
 	cacheFilePath, exists, err := getCacheFilePath()
-	if errorutils.CheckError(err) != nil || !exists {
+	if errorutils.WrapError(err) != nil || !exists {
 		return nil, err
 	}
 	jsonFile, err := os.Open(cacheFilePath)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 	defer jsonFile.Close()
 	byteValue, err := ioutil.ReadAll(jsonFile)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 	err = json.Unmarshal(byteValue, cache)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 
@@ -51,22 +51,22 @@ func UpdateDependenciesCache(updatedMap map[string]*buildinfo.Dependency) error 
 	updatedCache := DependenciesCache{Version: cacheLatestVersion, DepsMap: updatedMap}
 	content, err := json.Marshal(&updatedCache)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	cacheFilePath, _, err := getCacheFilePath()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	cacheFile, err := os.Create(cacheFilePath)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	defer cacheFile.Close()
 
 	_, err = cacheFile.Write(content)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	return nil
@@ -87,7 +87,7 @@ func (cache DependenciesCache) GetDependency(dependencyName string) *buildinfo.D
 // Cache file will be located in the ./.jfrog/projects/deps.cache.json
 func getCacheFilePath() (cacheFilePath string, exists bool, err error) {
 	projectsDirPath, err := os.Getwd()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return "", false, err
 	}
 	projectsDirPath = filepath.Join(projectsDirPath, ".jfrog", "projects")

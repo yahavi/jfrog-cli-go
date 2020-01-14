@@ -66,12 +66,12 @@ func Config(details, defaultDetails *config.MissionControlDetails, interactive b
 			ioutils.ScanFromConsole("Mission Control URL", &conf.Url, defaultDetails.Url)
 			var u *url.URL
 			u, err = url.Parse(conf.Url)
-			err = errorutils.CheckError(err)
+			err = errorutils.WrapError(err)
 			if err != nil {
 				return
 			}
 			if u.Scheme != "http" && u.Scheme != "https" {
-				err = errorutils.CheckError(errors.New("URL scheme is not valid " + u.Scheme))
+				err = errorutils.WrapError(errors.New("URL scheme is not valid " + u.Scheme))
 				if err != nil {
 					return
 				}

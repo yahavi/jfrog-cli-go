@@ -23,7 +23,7 @@ func AddService(serviceType, serviceName string, flags *AddServiceFlags) error {
 		SiteName:    flags.SiteName}
 	requestContent, err := json.Marshal(data)
 	if err != nil {
-		return errorutils.CheckError(errors.New("Failed to execute request. " + cliutils.GetDocumentationMessage()))
+		return errorutils.WrapError(errors.New("Failed to execute request. " + cliutils.GetDocumentationMessage()))
 	}
 	missionControlUrl := flags.MissionControlDetails.Url + "api/v3/services"
 	httpClientDetails := utils.GetMissionControlHttpClientDetails(flags.MissionControlDetails)
@@ -36,7 +36,7 @@ func AddService(serviceType, serviceName string, flags *AddServiceFlags) error {
 		return err
 	}
 	if resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusNoContent {
-		return errorutils.CheckError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
+		return errorutils.WrapError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
 	}
 
 	log.Debug("Mission Control response: " + resp.Status)

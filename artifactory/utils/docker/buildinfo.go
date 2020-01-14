@@ -124,13 +124,13 @@ func (builder *buildInfoBuilder) getImageLayersFromArtifactory() (map[string]uti
 	}
 
 	if builder.commandType == Push {
-		return nil, errorutils.CheckError(errors.New(fmt.Sprintf(ImageNotFoundErrorMessage, builder.imageId)))
+		return nil, errorutils.WrapError(errors.New(fmt.Sprintf(ImageNotFoundErrorMessage, builder.imageId)))
 	}
 
 	// If image path includes more than 3 slashes, Artifactory doesn't store this image under 'library',
 	// thus we should not look further.
 	if strings.Count(imagePath, "/") > 3 {
-		return nil, errorutils.CheckError(errors.New(fmt.Sprintf(ImageNotFoundErrorMessage, builder.imageId)))
+		return nil, errorutils.WrapError(errors.New(fmt.Sprintf(ImageNotFoundErrorMessage, builder.imageId)))
 	}
 
 	// Assume reverse proxy - this time with 'library' as part of the path.
@@ -146,7 +146,7 @@ func (builder *buildInfoBuilder) getImageLayersFromArtifactory() (map[string]uti
 	}
 
 	// Image layers not found.
-	return nil, errorutils.CheckError(errors.New(fmt.Sprintf(ImageNotFoundErrorMessage, builder.imageId)))
+	return nil, errorutils.WrapError(errors.New(fmt.Sprintf(ImageNotFoundErrorMessage, builder.imageId)))
 }
 
 func (builder *buildInfoBuilder) buildReverseProxyPathWithLibrary() string {
@@ -216,7 +216,7 @@ func (builder *buildInfoBuilder) handleMissingLayer(layerMediaType, layerFileNam
 		return nil
 	}
 
-	return errorutils.CheckError(errors.New("Could not find layer: " + layerFileName + " in Artifactory"))
+	return errorutils.WrapError(errors.New("Could not find layer: " + layerFileName + " in Artifactory"))
 }
 
 // Set build properties on docker image layers in Artifactory.
@@ -273,13 +273,13 @@ func getManifest(imageId string, searchResults map[string]utils.ResultItem, serv
 
 	imageManifest = new(manifest)
 	err = json.Unmarshal(content, &imageManifest)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, buildinfo.Artifact{}, buildinfo.Dependency{}, err
 	}
 
 	// Check that the manifest ID is the right one.
 	if imageManifest.Config.Digest != imageId {
-		return nil, buildinfo.Artifact{}, buildinfo.Dependency{}, errorutils.CheckError(errors.New("Found incorrect manifest.json file, expecting image ID: " + imageId))
+		return nil, buildinfo.Artifact{}, buildinfo.Dependency{}, errorutils.WrapError(errors.New("Found incorrect manifest.json file, expecting image ID: " + imageId))
 	}
 
 	artifact = buildinfo.Artifact{Name: "manifest.json", Checksum: &buildinfo.Checksum{Sha1: item.Actual_Sha1, Md5: item.Actual_Md5}}

@@ -379,7 +379,7 @@ func initBintrayCredentials() {
 
 	var err error
 	bintrayConfig, err = config.ReadBintrayConf()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		os.Exit(1)
 	}
 	if *tests.BtUser != "" {
@@ -437,7 +437,7 @@ func getPackageFiles(packageName string) []tests.PackageSearchResultItem {
 		os.Exit(1)
 	}
 	resp, body, _, err := client.SendGet(apiUrl, true, clientDetails)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		os.Exit(1)
 	}
 	if resp.StatusCode != http.StatusOK {
@@ -494,7 +494,7 @@ func createPackageAndVersion(packagePath, versionPath string) {
 
 func createBintrayRepo() {
 	content, err := ioutil.ReadFile(tests.GetTestResourcesPath() + tests.BintrayTestRepositoryConfig)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		os.Exit(1)
 	}
 
@@ -509,7 +509,7 @@ func createBintrayRepo() {
 		os.Exit(1)
 	}
 	resp, body, err := client.SendPost(apiUrl, content, clientDetails)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		os.Exit(1)
 	}
 
@@ -533,7 +533,7 @@ func deleteBintrayRepo() {
 		os.Exit(1)
 	}
 	resp, body, err := client.SendDelete(apiUrl, nil, clientDetails)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		log.Error(err)
 		os.Exit(1)
 	}

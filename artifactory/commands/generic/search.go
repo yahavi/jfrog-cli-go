@@ -52,7 +52,7 @@ func (sc *SearchCommand) Run() error {
 func (sc *SearchCommand) Search() error {
 	// Service Manager
 	rtDetails, err := sc.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	servicesManager, err := utils.CreateServiceManager(rtDetails, false)

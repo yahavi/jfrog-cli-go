@@ -155,11 +155,11 @@ func extractBuildInfoData(partials buildinfo.Partials, includeFilter, excludeFil
 			}
 		case partial.Env != nil:
 			envAfterIncludeFilter, e := includeFilter(partial.Env)
-			if errorutils.CheckError(e) != nil {
+			if errorutils.WrapError(e) != nil {
 				return partialModulesToModules(partialModules), env, vcs, issues, e
 			}
 			envAfterExcludeFilter, e := excludeFilter(envAfterIncludeFilter)
-			if errorutils.CheckError(e) != nil {
+			if errorutils.WrapError(e) != nil {
 				return partialModulesToModules(partialModules), env, vcs, issues, e
 			}
 			for k, v := range envAfterExcludeFilter {
@@ -254,7 +254,7 @@ func createIncludeFilter(pattern string) filterFunc {
 		for k, v := range tempMap {
 			for _, filterPattern := range includePattern {
 				matched, err := filepath.Match(strings.ToLower(filterPattern), strings.ToLower(k))
-				if errorutils.CheckError(err) != nil {
+				if errorutils.WrapError(err) != nil {
 					return nil, err
 				}
 				if matched {
@@ -275,7 +275,7 @@ func createExcludeFilter(pattern string) filterFunc {
 			include := true
 			for _, filterPattern := range excludePattern {
 				matched, err := filepath.Match(strings.ToLower(filterPattern), strings.ToLower(k))
-				if errorutils.CheckError(err) != nil {
+				if errorutils.WrapError(err) != nil {
 					return nil, err
 				}
 				if matched {

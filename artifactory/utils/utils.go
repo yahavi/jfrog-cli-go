@@ -29,7 +29,7 @@ func GetJfrogSecurityDir() (string, error) {
 func GetProjectDir(global bool) (string, error) {
 	configDir, err := getConfigDir(global)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	return filepath.Join(configDir, "projects"), nil
 }
@@ -77,10 +77,10 @@ func GetEncryptedPasswordFromArtifactory(artifactoryAuth auth.ArtifactoryDetails
 	if resp.StatusCode == http.StatusConflict {
 		message := "\nYour Artifactory server is not configured to encrypt passwords.\n" +
 			"You may use \"art config --enc-password=false\""
-		return "", errorutils.CheckError(errors.New(message))
+		return "", errorutils.WrapError(errors.New(message))
 	}
 
-	return "", errorutils.CheckError(errors.New("Artifactory response: " + resp.Status))
+	return "", errorutils.WrapError(errors.New("Artifactory response: " + resp.Status))
 }
 
 func CreateServiceManager(artDetails *config.ArtifactoryDetails, isDryRun bool) (*artifactory.ArtifactoryServicesManager, error) {
@@ -112,7 +112,7 @@ func isRepoExists(repository string, artDetails auth.ArtifactoryDetails) (bool, 
 	}
 	resp, _, _, err := client.SendGet(artDetails.GetUrl()+repoDetailsUrl+repository, true, artHttpDetails)
 	if err != nil {
-		return false, errorutils.CheckError(err)
+		return false, errorutils.WrapError(err)
 	}
 
 	if resp.StatusCode != http.StatusBadRequest {
@@ -128,7 +128,7 @@ func CheckIfRepoExists(repository string, artDetails auth.ArtifactoryDetails) er
 	}
 
 	if !repoExists {
-		return errorutils.CheckError(errors.New("The repository '" + repository + "' does not exist."))
+		return errorutils.WrapError(errors.New("The repository '" + repository + "' does not exist."))
 	}
 	return nil
 }

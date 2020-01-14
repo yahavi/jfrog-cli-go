@@ -153,20 +153,20 @@ func (project *goProject) createInfoFile() (string, error) {
 	goInfoContent := goInfo{Version: project.version, Time: currentTime}
 	content, err := json.Marshal(&goInfoContent)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	file, err := os.Create(project.version + ".info")
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	defer file.Close()
 	_, err = file.Write(content)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	path, err := filepath.Abs(file.Name())
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	log.Debug("Info file was successfully created:", path)
 	return path, nil
@@ -233,18 +233,18 @@ func (project *goProject) readModFile() error {
 	var err error
 	project.projectPath, err = cmd.GetProjectRoot()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	modFilePath := filepath.Join(project.projectPath, "go.mod")
 	modFile, err := os.Open(modFilePath)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	defer modFile.Close()
 	content, err := ioutil.ReadAll(modFile)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	// Read module name
@@ -272,12 +272,12 @@ func (project *goProject) archiveProject(version, tempDir string) (string, error
 	tempFile, err := ioutil.TempFile(tempDir, "project.zip")
 
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	defer tempFile.Close()
 	err = archiveProject(tempFile, project.projectPath, project.moduleName, version)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	// Double-check that the paths within the zip file are well-formed.
 	fi, err := tempFile.Stat()
@@ -329,7 +329,7 @@ func (project *goProject) addInfoFileToBuildInfo(infoFilePath string) error {
 func parseModuleName(modContent string) (string, error) {
 	r, err := regexp.Compile(`module "?([\w\.@:%_\+-.~#?&]+/?.+\w)`)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	lines := strings.Split(modContent, "\n")
 	for _, v := range lines {
@@ -339,7 +339,7 @@ func parseModuleName(modContent string) (string, error) {
 		}
 	}
 
-	return "", errorutils.CheckError(errors.New("Module name missing in go.mod file"))
+	return "", errorutils.WrapError(errors.New("Module name missing in go.mod file"))
 }
 
 type goInfo struct {

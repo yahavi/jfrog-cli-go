@@ -20,7 +20,7 @@ func ReadPackageInfoFromPackageJson(packageJsonDirectory string) (*PackageInfo, 
 	log.Debug("Reading info from package.json file:", filepath.Join(packageJsonDirectory, "package.json"))
 	packageJson, err := ioutil.ReadFile(filepath.Join(packageJsonDirectory, "package.json"))
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	return ReadPackageInfo(packageJson)
 }
@@ -28,7 +28,7 @@ func ReadPackageInfoFromPackageJson(packageJsonDirectory string) (*PackageInfo, 
 func ReadPackageInfo(data []byte) (*PackageInfo, error) {
 	parsedResult := new(PackageInfo)
 	if err := json.Unmarshal(data, parsedResult); err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	removeVersionPrefixes(parsedResult)
 	splitScopeFromName(parsedResult)

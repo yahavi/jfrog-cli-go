@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/codegangsta/cli"
 	"github.com/jfrog/jfrog-cli-go/artifactory"
 	"github.com/jfrog/jfrog-cli-go/bintray"
@@ -11,7 +13,6 @@ import (
 	"github.com/jfrog/jfrog-cli-go/utils/log"
 	"github.com/jfrog/jfrog-cli-go/xray"
 	"github.com/jfrog/jfrog-client-go/utils"
-	"os"
 )
 
 const commandHelpTemplate string = `{{.HelpName}}{{if .UsageText}}
@@ -83,6 +84,7 @@ func execMain() error {
 	args := os.Args
 	app.EnableBashCompletion = true
 	app.Commands = getCommands()
+	app.Flags = getFlags()
 	cli.CommandHelpTemplate = commandHelpTemplate
 	cli.AppHelpTemplate = appHelpTemplate
 	cli.SubcommandHelpTemplate = subcommandHelpTemplate
@@ -116,6 +118,15 @@ func getCommands() []cli.Command {
 			Name:        cliutils.CmdCompletion,
 			Usage:       "Generate autocomplete scripts",
 			Subcommands: completion.GetCommands(),
+		},
+	}
+}
+
+func getFlags() []cli.Flag {
+	return []cli.Flag{
+		cli.BoolFlag{
+			Name:  "stacktrace",
+			Usage: "[Default: false] Set to true to print the error stacktrace for all errors.` `",
 		},
 	}
 }

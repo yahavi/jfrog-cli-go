@@ -215,17 +215,17 @@ func (nca *NpmCommandArgs) prepareBuildInfo() error {
 func (nca *NpmCommandArgs) setWorkingDirectory() error {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	if currentDir, err = filepath.Abs(currentDir); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	nca.workingDirectory = currentDir
 	log.Debug("Working directory set to:", nca.workingDirectory)
 	if err = nca.setArtifactoryAuth(); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	return nil
 }
@@ -236,7 +236,7 @@ func (nca *NpmCommandArgs) setWorkingDirectory() error {
 func (nca *NpmCommandArgs) restoreNpmrc() (err error) {
 	log.Debug("Restoring project .npmrc file")
 	if err = os.Remove(filepath.Join(nca.workingDirectory, npmrcFileName)); err != nil {
-		return errorutils.CheckError(errors.New(createRestoreErrorPrefix(nca.workingDirectory) + err.Error()))
+		return errorutils.WrapError(errors.New(createRestoreErrorPrefix(nca.workingDirectory) + err.Error()))
 	}
 	log.Debug("Deleted the temporary .npmrc file successfully")
 
@@ -244,18 +244,18 @@ func (nca *NpmCommandArgs) restoreNpmrc() (err error) {
 		if os.IsNotExist(err) {
 			return nil
 		}
-		return errorutils.CheckError(errors.New(createRestoreErrorPrefix(nca.workingDirectory) + err.Error()))
+		return errorutils.WrapError(errors.New(createRestoreErrorPrefix(nca.workingDirectory) + err.Error()))
 	}
 
 	if err = ioutils.CopyFile(
 		filepath.Join(nca.workingDirectory, npmrcBackupFileName),
 		filepath.Join(nca.workingDirectory, npmrcFileName), nca.npmrcFileMode); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Debug("Restored project .npmrc file successfully")
 
 	if err = os.Remove(filepath.Join(nca.workingDirectory, npmrcBackupFileName)); err != nil {
-		return errorutils.CheckError(errors.New(createRestoreErrorPrefix(nca.workingDirectory) + err.Error()))
+		return errorutils.WrapError(errors.New(createRestoreErrorPrefix(nca.workingDirectory) + err.Error()))
 	}
 	log.Debug("Deleted project", npmrcBackupFileName, "file successfully")
 	return nil
@@ -276,14 +276,14 @@ func (nca *NpmCommandArgs) createTempNpmrc() error {
 	data, err := npm.GetConfigList(nca.npmArgs, nca.executablePath)
 	configData, err := nca.prepareConfigData(data)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	if err = removeNpmrcIfExists(nca.workingDirectory); err != nil {
 		return err
 	}
 
-	return errorutils.CheckError(ioutil.WriteFile(filepath.Join(nca.workingDirectory, npmrcFileName), configData, nca.npmrcFileMode))
+	return errorutils.WrapError(ioutil.WriteFile(filepath.Join(nca.workingDirectory, npmrcFileName), configData, nca.npmrcFileMode))
 }
 
 func (nca *NpmCommandArgs) runInstall() error {
@@ -302,7 +302,7 @@ func (nca *NpmCommandArgs) runInstall() error {
 		nca.collectBuildInfo = false
 	}
 
-	return errorutils.CheckError(gofrogcmd.RunCmd(installCmdConfig))
+	return errorutils.WrapError(gofrogcmd.RunCmd(installCmdConfig))
 }
 
 func (nca *NpmCommandArgs) setDependenciesList() (err error) {
@@ -374,7 +374,7 @@ func (nca *NpmCommandArgs) validateNpmVersion() error {
 	}
 	rtVersion := version.NewVersion(string(npmVersion))
 	if rtVersion.Compare(minSupportedNpmVersion) > 0 {
-		return errorutils.CheckError(errors.New("JFrog cli npm-install command requires npm client version " + minSupportedNpmVersion + " or higher."))
+		return errorutils.WrapError(errors.New("JFrog cli npm-install command requires npm client version " + minSupportedNpmVersion + " or higher."))
 	}
 	return nil
 }
@@ -388,7 +388,7 @@ func (nca *NpmCommandArgs) backupProjectNpmrc() error {
 			nca.npmrcFileMode = 0644
 			return nil
 		}
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	nca.npmrcFileMode = fileInfo.Mode()
@@ -407,7 +407,7 @@ func (nca *NpmCommandArgs) prepareConfigData(data []byte) ([]byte, error) {
 	var collectedConfig map[string]interface{}
 	var filteredConf []string
 	if err := json.Unmarshal(data, &collectedConfig); err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	for i := range collectedConfig {
@@ -466,7 +466,7 @@ func (nca *NpmCommandArgs) parseDependencies(data []byte, scope string) error {
 	err := jsonparser.ObjectEach(data, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
 		ver, _, _, err := jsonparser.Get(data, string(key), "version")
 		if err != nil && err != jsonparser.KeyPathNotFoundError {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		} else if err == jsonparser.KeyPathNotFoundError {
 			log.Warn(fmt.Sprintf("npm dependencies list contains the package '%s' without version information. The dependency will not be added to build-info.", string(key)))
 		} else {
@@ -474,7 +474,7 @@ func (nca *NpmCommandArgs) parseDependencies(data []byte, scope string) error {
 		}
 		transitive, _, _, err := jsonparser.Get(data, string(key), "dependencies")
 		if err != nil && err.Error() != "Key path not found" {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 
 		if len(transitive) > 0 {
@@ -519,7 +519,7 @@ func (nca *NpmCommandArgs) createGetDependencyInfoFunc(servicesManager *artifact
 
 			parsedResult := new(aqlResult)
 			if err = json.Unmarshal(result, parsedResult); err != nil {
-				return errorutils.CheckError(err)
+				return errorutils.WrapError(err)
 			}
 			if len(parsedResult.Results) == 0 {
 				log.Debug(cliutils.GetLogMsgPrefix(threadId, false), name, "-", ver, "could not be found in Artifactory.")
@@ -562,7 +562,7 @@ func (nca *NpmCommandArgs) setArtifactoryAuth() error {
 		return err
 	}
 	if authArtDetails.GetSshAuthHeaders() != nil {
-		return errorutils.CheckError(errors.New("SSH authentication is not supported in this command."))
+		return errorutils.WrapError(errors.New("SSH authentication is not supported in this command."))
 	}
 	nca.artDetails = authArtDetails
 	return nil
@@ -573,21 +573,21 @@ func removeNpmrcIfExists(workingDirectory string) error {
 		if os.IsNotExist(err) { // The file dose not exist, nothing to do.
 			return nil
 		}
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	log.Debug("Removing Existing .npmrc file")
-	return errorutils.CheckError(os.Remove(filepath.Join(workingDirectory, npmrcFileName)))
+	return errorutils.WrapError(os.Remove(filepath.Join(workingDirectory, npmrcFileName)))
 }
 
 func (nca *NpmCommandArgs) setNpmExecutable() error {
 	npmExecPath, err := exec.LookPath("npm")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	if npmExecPath == "" {
-		return errorutils.CheckError(errors.New("Could not find 'npm' executable"))
+		return errorutils.WrapError(errors.New("Could not find 'npm' executable"))
 	}
 	nca.executablePath = npmExecPath
 	log.Debug("Found npm executable at:", nca.executablePath)
@@ -618,7 +618,7 @@ func validateArtifactoryVersion(artDetails auth.ArtifactoryDetails) error {
 	// Validate version.
 	rtVersion := version.NewVersion(versionStr)
 	if !rtVersion.AtLeast(minSupportedArtifactoryVersion) {
-		return errorutils.CheckError(errors.New("This operation requires Artifactory version " + minSupportedArtifactoryVersion + " or higher."))
+		return errorutils.WrapError(errors.New("This operation requires Artifactory version " + minSupportedArtifactoryVersion + " or higher."))
 	}
 
 	return nil
@@ -652,7 +652,7 @@ func getDetailsUsingBasicAuth(artDetails auth.ArtifactoryDetails) (npmAuth strin
 		return "", err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return "", errorutils.CheckError(errors.New("Artifactory response: " + resp.Status + "\n" + cliutils.IndentJson(body)))
+		return "", errorutils.WrapError(errors.New("Artifactory response: " + resp.Status + "\n" + cliutils.IndentJson(body)))
 	}
 
 	return string(body), nil

@@ -41,7 +41,7 @@ func Config(details, defaultDetails *config.BintrayDetails, interactive bool) (*
 		if details.Key == "" {
 			print("Key: ")
 			byteKey, err := terminal.ReadPassword(int(syscall.Stdin))
-			err = errorutils.CheckError(err)
+			err = errorutils.WrapError(err)
 			if err != nil {
 				return nil, err
 			}

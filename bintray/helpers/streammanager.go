@@ -96,7 +96,7 @@ func (sm *StreamManager) Connect() (bool, *http.Response) {
 		return false, resp
 	}
 	if resp.StatusCode != http.StatusOK {
-		errorutils.CheckError(errors.New("response: " + resp.Status))
+		errorutils.WrapError(errors.New("response: " + resp.Status))
 		msgBody, _ := ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
 		if resp.StatusCode > 400 && resp.StatusCode < 500 {

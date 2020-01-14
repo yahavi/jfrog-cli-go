@@ -56,7 +56,7 @@ func Upload(config bintray.Config, uploadDetails *services.UploadParams) (upload
 
 func promptRepoNotExist(versionDetails *versions.Params) error {
 	msg := "It looks like repository '" + versionDetails.Repo + "' does not exist.\n"
-	return errorutils.CheckError(errors.New(msg))
+	return errorutils.WrapError(errors.New(msg))
 }
 
 func promptPackageNotExist(versionDetails *versions.Path) error {
@@ -74,6 +74,6 @@ func promptPackageNotExist(versionDetails *versions.Path) error {
 	if conf.DefPackageLicense == "" {
 		msg += " --licenses=Apache-2.0-example"
 	}
-	err = errorutils.CheckError(errors.New(msg))
+	err = errorutils.WrapError(errors.New(msg))
 	return err
 }

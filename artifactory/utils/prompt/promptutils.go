@@ -51,19 +51,19 @@ func VerifyConfigFile(configFilePath string) error {
 		}
 
 		if !yesNoPrompt.Result.GetBool("override") {
-			return errorutils.CheckError(errors.New("Operation canceled."))
+			return errorutils.WrapError(errors.New("Operation canceled."))
 		}
 		return nil
 	}
 
 	// Create config file to make sure the path is valid
 	f, err := os.OpenFile(configFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	f.Close()
 	// The file will be written at the end of successful configuration command.
-	return errorutils.CheckError(os.Remove(configFilePath))
+	return errorutils.WrapError(os.Remove(configFilePath))
 }
 
 func ReadArtifactoryServer(msg string) (*viper.Viper, error) {
@@ -73,7 +73,7 @@ func ReadArtifactoryServer(msg string) (*viper.Viper, error) {
 	}
 
 	if len(serversId) == 0 {
-		return nil, errorutils.CheckError(errors.New("Artifactory server configuration is missing, use 'jfrog rt c' command to set server details."))
+		return nil, errorutils.WrapError(errors.New("Artifactory server configuration is missing, use 'jfrog rt c' command to set server details."))
 	}
 
 	server := &prompt.YesNo{
@@ -91,7 +91,7 @@ func ReadArtifactoryServer(msg string) (*viper.Viper, error) {
 
 	err = server.Read()
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	return server.GetResults(), nil
 }
@@ -103,7 +103,7 @@ func ReadServerId() (string, *viper.Viper, error) {
 	}
 
 	if len(serversId) == 0 {
-		return "", nil, errorutils.CheckError(errors.New("Artifactory server configuration is missing, use 'jfrog rt c' command to set server details."))
+		return "", nil, errorutils.WrapError(errors.New("Artifactory server configuration is missing, use 'jfrog rt c' command to set server details."))
 	}
 
 	server := &prompt.Autocomplete{
@@ -116,7 +116,7 @@ func ReadServerId() (string, *viper.Viper, error) {
 
 	err = server.Read()
 	if err != nil {
-		return "", nil, errorutils.CheckError(err)
+		return "", nil, errorutils.WrapError(err)
 	}
 	vConfig := server.GetResults()
 	return vConfig.GetString(utils.SERVER_ID), vConfig, nil

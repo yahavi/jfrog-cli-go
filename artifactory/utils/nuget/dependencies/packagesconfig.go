@@ -142,7 +142,7 @@ func (extractor *packagesExtractor) loadPackagesConfig(rootPath string) (*packag
 	config := &packagesConfig{}
 	err = xml.Unmarshal(content, config)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	return config, nil
 }
@@ -223,7 +223,7 @@ func createNugetPackage(packagesPath string, nuget xmlPackage, nPackage *nugetPa
 	nuspecPath := filepath.Join(packagesPath, nPackage.id, nPackage.version, strings.Join([]string{nPackage.id, "nuspec"}, "."))
 	nuspecContent, err := ioutil.ReadFile(nuspecPath)
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 
 	nuspec := &nuspec{}
@@ -283,7 +283,7 @@ func (extractor *packagesExtractor) getGlobalPackagesCache() (string, error) {
 		return "", err
 	}
 	if !exists {
-		return "", errorutils.CheckError(fmt.Errorf("Could not find global packages path at: %s", globalPackagesPath))
+		return "", errorutils.WrapError(fmt.Errorf("Could not find global packages path at: %s", globalPackagesPath))
 	}
 	return globalPackagesPath, nil
 }

@@ -1475,7 +1475,7 @@ func validateCommand(args []string, notAllowedFlags []cli.Flag) error {
 		for _, flag := range notAllowedFlags {
 			// Cli flags are in the format of --key, therefore, the -- need to be added to the name
 			if strings.Contains(arg, "--"+flag.GetName()) {
-				return errorutils.CheckError(fmt.Errorf("Flag --%s can't be used with config file", flag.GetName()))
+				return errorutils.WrapError(fmt.Errorf("Flag --%s can't be used with config file", flag.GetName()))
 			}
 		}
 	}
@@ -1587,7 +1587,7 @@ func mvnCmd(c *cli.Context) error {
 		}
 		args, err := shellwords.Parse(strings.Join(extractCommand(c), " "))
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		// Validates the mvn command. If a config file is found, the only flags that can be used are build-name, build-number and module.
 		// Otherwise, throw an error.
@@ -1613,7 +1613,7 @@ func gradleCmd(c *cli.Context) error {
 		}
 		args, err := shellwords.Parse(strings.Join(extractCommand(c), " "))
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		// Validates the gradle command. If a config file is found, the only flags that can be used are build-name, build-number and module.
 		// Otherwise, throw an error.
@@ -1704,7 +1704,7 @@ func nugetCmd(c *cli.Context) error {
 		// Found a config file.
 		args, err := shellwords.Parse(strings.Join(extractCommand(c), " "))
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		// Validates the nuget command. If a config file is found, the only flags that can be used are build-name, build-number and module.
 		// Otherwise, throw an error.
@@ -1787,7 +1787,7 @@ func npmInstallCmd(c *cli.Context, npmCmd *npm.NpmInstallCommand, npmLegacyComma
 		// Found a config file. Continue as native command.
 		args, err := shellwords.Parse(strings.Join(extractCommand(c), " "))
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		// Validates the npm command. If a config file is found, the only flags that can be used are threads, build-name, build-number and module.
 		// Otherwise, throw an error.
@@ -1832,7 +1832,7 @@ func npmPublishCmd(c *cli.Context) error {
 		// Found a config file. Continue as native command.
 		args, err := shellwords.Parse(strings.Join(extractCommand(c), " "))
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		// Validates the npm command. If a config file is found, the only flags that can be used are build-name, build-number and module.
 		// Otherwise, throw an error.

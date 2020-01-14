@@ -320,6 +320,10 @@ func getFlags() []cli.Flag {
 			Value: "",
 			Usage: "[Mandatory] Bintray API key` `",
 		},
+		cli.BoolFlag{
+			Name:  "stacktrace",
+			Usage: "[Default: false] Set to true to print the error stacktrace for all errors.` `",
+		},
 	}
 }
 

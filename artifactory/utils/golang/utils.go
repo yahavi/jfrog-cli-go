@@ -9,7 +9,7 @@ import (
 func LogGoVersion() error {
 	output, err := cmd.GetGoVersion()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Info("Using go:", output)
 	return nil

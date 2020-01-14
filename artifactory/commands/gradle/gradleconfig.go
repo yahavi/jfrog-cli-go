@@ -63,11 +63,11 @@ func CreateBuildConfig(configFilePath string) error {
 
 	resBytes, err := yaml.Marshal(&configResult)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	err = ioutil.WriteFile(configFilePath, resBytes, 0644)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	log.Info("Gradle build config successfully created.")
@@ -91,7 +91,7 @@ func readGradleGlobalConfig() (*viper.Viper, error) {
 	}
 	err := globalOptions.Read()
 	if err != nil {
-		return nil, errorutils.CheckError(err)
+		return nil, errorutils.WrapError(err)
 	}
 	vConfig := globalOptions.GetResults()
 	return vConfig, nil
@@ -126,7 +126,7 @@ func readDescriptors(deployer *GradleDeployer) error {
 	}
 	err := descriptors.Read()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	vConfig := descriptors.GetResults()
 	deployer.DeployMavenDesc = vConfig.GetBool(utils.MAVEN_DESCRIPTOR)

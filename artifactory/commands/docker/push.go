@@ -30,7 +30,7 @@ func (dpc *DockerPushCommand) SetThreads(threads int) *DockerPushCommand {
 func (dpc *DockerPushCommand) Run() error {
 	// Perform login
 	rtDetails, err := dpc.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	if !dpc.skipLogin {

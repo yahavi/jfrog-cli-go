@@ -31,7 +31,7 @@ func NewRequirementsExtractor(requirementsFilePath, pythonExecutablePath string)
 func (extractor *requirementsExtractor) Extract() error {
 	// Parse requirements.txt, add to rootDependencies.
 	dependencies, err := extractor.parseRequirementsFile()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	extractor.rootDependencies = dependencies
@@ -61,7 +61,7 @@ func (extractor *requirementsExtractor) parseRequirementsFile() ([]string, error
 	var dependencies []string
 
 	file, err := os.Open(extractor.requirementsFilePath)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 	defer file.Close()
@@ -98,7 +98,7 @@ func (extractor *requirementsExtractor) parseRequirementsFile() ([]string, error
 
 	// Check for scanner error.
 	if err := scanner.Err(); err != nil {
-		errorutils.CheckError(err)
+		errorutils.WrapError(err)
 		return nil, err
 	}
 

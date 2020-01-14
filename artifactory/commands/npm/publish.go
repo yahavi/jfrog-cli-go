@@ -81,7 +81,7 @@ func (npc *NpmPublishCommand) Run() error {
 		}
 		rtDetails, err := deployerParams.RtDetails()
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		npc.SetBuildConfiguration(buildConfiguration).SetRepo(deployerParams.TargetRepo()).SetNpmArgs(filteredNpmArgs).SetRtDetails(rtDetails)
 	}
@@ -135,23 +135,23 @@ func (npc *NpmPublishCommand) preparePrerequisites() error {
 	log.Debug("Preparing prerequisites.")
 	npmExecPath, err := exec.LookPath("npm")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	if npmExecPath == "" {
-		return errorutils.CheckError(errors.New("Could not find 'npm' executable"))
+		return errorutils.WrapError(errors.New("Could not find 'npm' executable"))
 	}
 
 	npc.executablePath = npmExecPath
 	log.Debug("Using npm executable:", npc.executablePath)
 	currentDir, err := os.Getwd()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	currentDir, err = filepath.Abs(currentDir)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	npc.workingDirectory = currentDir
@@ -222,7 +222,7 @@ func (npc *NpmPublishCommand) doDeploy(target string, artDetails *config.Artifac
 
 	// We deploying only one Artifact which have to be deployed, in case of failure we should fail
 	if failed > 0 {
-		return nil, errorutils.CheckError(errors.New("Failed to upload the npm package to Artifactory. See Artifactory logs for more details."))
+		return nil, errorutils.WrapError(errors.New("Failed to upload the npm package to Artifactory. See Artifactory logs for more details."))
 	}
 	return artifactsFileInfo, nil
 }
@@ -265,7 +265,7 @@ func (npc *NpmPublishCommand) setPackageInfo() error {
 	log.Debug("Setting Package Info.")
 	fileInfo, err := os.Stat(npc.publishPath)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	if fileInfo.IsDir() {
@@ -282,12 +282,12 @@ func (npc *NpmPublishCommand) readPackageInfoFromTarball() error {
 	log.Debug("Extracting info from npm package:", npc.packedFilePath)
 	tarball, err := os.Open(npc.packedFilePath)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	defer tarball.Close()
 	gZipReader, err := gzip.NewReader(tarball)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	tarReader := tar.NewReader(gZipReader)
@@ -295,14 +295,14 @@ func (npc *NpmPublishCommand) readPackageInfoFromTarball() error {
 		hdr, err := tarReader.Next()
 		if err != nil {
 			if err == io.EOF {
-				return errorutils.CheckError(errors.New("Could not find 'package.json' in the compressed npm package: " + npc.packedFilePath))
+				return errorutils.WrapError(errors.New("Could not find 'package.json' in the compressed npm package: " + npc.packedFilePath))
 			}
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 		if strings.HasSuffix(hdr.Name, "package.json") {
 			packageJson, err := ioutil.ReadAll(tarReader)
 			if err != nil {
-				return errorutils.CheckError(err)
+				return errorutils.WrapError(err)
 			}
 
 			npc.packageInfo, err = npm.ReadPackageInfo(packageJson)
@@ -314,14 +314,14 @@ func (npc *NpmPublishCommand) readPackageInfoFromTarball() error {
 func deleteCreatedTarballAndError(packedFilePath string, currentError error) error {
 	if err := deleteCreatedTarball(packedFilePath); err != nil {
 		errorText := fmt.Sprintf("Two errors occurred: \n%s \n%s", currentError, err)
-		return errorutils.CheckError(errors.New(errorText))
+		return errorutils.WrapError(errors.New(errorText))
 	}
 	return currentError
 }
 
 func deleteCreatedTarball(packedFilePath string) error {
 	if err := os.Remove(packedFilePath); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Debug("Successfully deleted the created npm package:", packedFilePath)
 	return nil

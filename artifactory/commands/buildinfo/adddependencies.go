@@ -174,7 +174,7 @@ func collectPatternMatchingFiles(addDepsParams *specutils.ArtifactoryCommonParam
 	addDepsParams.SetPattern(clientutils.PrepareLocalPathForUpload(addDepsParams.Pattern, addDepsParams.IsRegexp()))
 	excludePathPattern := fspatterns.PrepareExcludePathPattern(addDepsParams)
 	patternRegex, err := regxp.Compile(addDepsParams.Pattern)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return nil, err
 	}
 

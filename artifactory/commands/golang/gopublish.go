@@ -64,7 +64,7 @@ func (gpc *GoPublishCommand) Run() error {
 	}
 
 	rtDetails, err := gpc.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	serviceManager, err := utils.CreateServiceManager(rtDetails, false)
@@ -78,7 +78,7 @@ func (gpc *GoPublishCommand) Run() error {
 
 	version := version.NewVersion(artifactoryVersion)
 	if !version.AtLeast(minSupportedArtifactoryVersion) {
-		return errorutils.CheckError(errors.New("This operation requires Artifactory version 6.2.0 or higher."))
+		return errorutils.WrapError(errors.New("This operation requires Artifactory version 6.2.0 or higher."))
 	}
 
 	buildName := gpc.buildConfiguration.BuildName
@@ -146,7 +146,7 @@ func (gpc *GoPublishCommand) CommandName() string {
 func validatePrerequisites() error {
 	_, err := exec.LookPath("go")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	return nil
 }

@@ -138,7 +138,7 @@ func createGradleRunConfig(tasks, configPath string, configuration *utils.BuildC
 func getInitScript(gradleDependenciesDir, gradlePluginFilename string) (string, error) {
 	gradleDependenciesDir, err := filepath.Abs(gradleDependenciesDir)
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	initScriptPath := filepath.Join(gradleDependenciesDir, gradleInitScriptTemplate)
 
@@ -152,12 +152,12 @@ func getInitScript(gradleDependenciesDir, gradlePluginFilename string) (string, 
 	initScriptContent := strings.Replace(utils.GradleInitScript, "${pluginLibDir}", gradlePluginPath, -1)
 	if !fileutils.IsPathExists(gradleDependenciesDir, false) {
 		err = os.MkdirAll(gradleDependenciesDir, 0777)
-		if errorutils.CheckError(err) != nil {
+		if errorutils.WrapError(err) != nil {
 			return "", err
 		}
 	}
 
-	return initScriptPath, errorutils.CheckError(ioutil.WriteFile(initScriptPath, []byte(initScriptContent), 0644))
+	return initScriptPath, errorutils.WrapError(ioutil.WriteFile(initScriptPath, []byte(initScriptContent), 0644))
 }
 
 type gradleRunConfig struct {
@@ -200,7 +200,7 @@ func getGradleExecPath(useWrapper bool) (string, error) {
 	}
 	gradleExec, err := exec.LookPath("gradle")
 	if err != nil {
-		return "", errorutils.CheckError(err)
+		return "", errorutils.WrapError(err)
 	}
 	return gradleExec, nil
 }

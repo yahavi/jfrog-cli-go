@@ -21,7 +21,7 @@ func Remove(serviceName string, flags *RemoveFlags) error {
 		return err
 	}
 	if resp.StatusCode != 204 {
-		return errorutils.CheckError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
+		return errorutils.WrapError(errors.New(resp.Status + ". " + utils.ReadMissionControlHttpMessage(body)))
 	}
 	log.Debug("Mission Control response: " + resp.Status)
 	return nil

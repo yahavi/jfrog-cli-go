@@ -101,11 +101,11 @@ func buildUpdatesUrl(flags *OfflineUpdatesFlags) (string, error) {
 func validateDates(from, to int64) error {
 	if from < 0 || to < 0 {
 		err := errors.New("Invalid dates")
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	if from > to {
 		err := errors.New("Invalid dates range.")
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	return nil
 }
@@ -113,7 +113,7 @@ func validateDates(from, to int64) error {
 func getXrayTempDir() (string, error) {
 	xrayDir := filepath.Join(cliutils.GetCliPersistentTempDirPath(), "jfrog", "xray")
 	if err := os.MkdirAll(xrayDir, 0777); err != nil {
-		errorutils.CheckError(err)
+		errorutils.WrapError(err)
 		return "", nil
 	}
 	return xrayDir, nil
@@ -173,7 +173,7 @@ func createXrayFileNameFromUrl(url string) (fileName string, err error) {
 	sections := strings.Split(url, "/")
 	length := len(sections)
 	if length < 2 {
-		err = errorutils.CheckError(errors.New(fmt.Sprintf("Unexpected URL format: %s", originalUrl)))
+		err = errorutils.WrapError(errors.New(fmt.Sprintf("Unexpected URL format: %s", originalUrl)))
 		return
 	}
 	fileName = fmt.Sprintf("%s__%s", sections[length-2], sections[length-1])
@@ -192,18 +192,18 @@ func getFilesList(updatesUrl string, flags *OfflineUpdatesFlags) (vulnerabilitie
 		return
 	}
 	resp, body, _, err := client.SendGet(updatesUrl, false, httpClientDetails)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return
 	}
 	if err = errorutils.CheckResponseStatus(resp, http.StatusOK); err != nil {
-		err = errorutils.CheckError(errors.New("Response: " + err.Error()))
+		err = errorutils.WrapError(errors.New("Response: " + err.Error()))
 		return
 	}
 
 	var urls FilesList
 	err = json.Unmarshal(body, &urls)
 	if err != nil {
-		err = errorutils.CheckError(errors.New("Failed parsing json response: " + string(body)))
+		err = errorutils.WrapError(errors.New("Failed parsing json response: " + string(body)))
 		return
 	}
 

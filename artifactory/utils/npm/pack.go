@@ -9,7 +9,7 @@ func Pack(npmFlags []string, executablePath string) error {
 
 	configListCmdConfig := createPackCmdConfig(executablePath, npmFlags)
 	if err := gofrogcmd.RunCmd(configListCmdConfig); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	return nil

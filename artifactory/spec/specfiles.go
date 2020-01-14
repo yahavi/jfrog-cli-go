@@ -28,7 +28,7 @@ func (spec *SpecFiles) Get(index int) *File {
 func CreateSpecFromFile(specFilePath string, specVars map[string]string) (spec *SpecFiles, err error) {
 	spec = new(SpecFiles)
 	content, err := fileutils.ReadFile(specFilePath)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return
 	}
 
@@ -37,7 +37,7 @@ func CreateSpecFromFile(specFilePath string, specVars map[string]string) (spec *
 	}
 
 	err = json.Unmarshal(content, spec)
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return
 	}
 	return

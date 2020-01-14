@@ -61,7 +61,7 @@ func GetArtifactorySpecificConfig(serverId string) (*ArtifactoryDetails, error) 
 	}
 	if len(serverId) == 0 {
 		details, err := GetDefaultConfiguredArtifactoryConf(details)
-		return details, errorutils.CheckError(err)
+		return details, errorutils.WrapError(err)
 	}
 	return getArtifactoryConfByServerId(serverId, details)
 }
@@ -113,7 +113,7 @@ func getArtifactoryConfByServerId(serverId string, configs []*ArtifactoryDetails
 			return conf, nil
 		}
 	}
-	return nil, errorutils.CheckError(errors.New(fmt.Sprintf("Server ID '%s' does not exist.", serverId)))
+	return nil, errorutils.WrapError(errors.New(fmt.Sprintf("Server ID '%s' does not exist.", serverId)))
 }
 
 func GetAndRemoveConfiguration(serverName string, configs []*ArtifactoryDetails) (*ArtifactoryDetails, []*ArtifactoryDetails) {
@@ -193,12 +193,12 @@ func saveConfig(config *ConfigV1) error {
 	config.Version = cliutils.GetConfigVersion()
 	b, err := json.Marshal(&config)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	var content bytes.Buffer
 	err = json.Indent(&content, b, "", "  ")
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	path, err := getConfFilePath()
 	if err != nil {
@@ -207,7 +207,7 @@ func saveConfig(config *ConfigV1) error {
 
 	err = ioutil.WriteFile(path, []byte(content.String()), 0600)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	return nil
@@ -245,7 +245,7 @@ func convertIfNecessary(content []byte) ([]byte, error) {
 		if err.Error() == "Key path not found" {
 			version = "0"
 		} else {
-			return nil, errorutils.CheckError(err)
+			return nil, errorutils.WrapError(err)
 		}
 	}
 	switch version {
@@ -253,7 +253,7 @@ func convertIfNecessary(content []byte) ([]byte, error) {
 		result := new(ConfigV1)
 		configV0 := new(ConfigV0)
 		err = json.Unmarshal(content, &configV0)
-		if errorutils.CheckError(err) != nil {
+		if errorutils.WrapError(err) != nil {
 			return nil, err
 		}
 		result = configV0.Convert()
@@ -274,7 +274,7 @@ func GetJfrogHomeDir() (string, error) {
 
 	userHomeDir := fileutils.GetHomeDir()
 	if userHomeDir == "" {
-		err := errorutils.CheckError(errors.New("Couldn't find home directory. Make sure your HOME environment variable is set."))
+		err := errorutils.WrapError(errors.New("Couldn't find home directory. Make sure your HOME environment variable is set."))
 		if err != nil {
 			return "", err
 		}

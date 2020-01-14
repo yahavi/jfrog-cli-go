@@ -63,11 +63,11 @@ func (lock *Lock) CreateFile(folderName string, pid int) error {
 	log.Debug("Creating lock file: ", lock.fileName)
 	file, err := os.OpenFile(lock.fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 
 	if err = file.Close(); err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	return nil
 }
@@ -176,16 +176,16 @@ func (lock *Lock) getLocks(filesList []string) (Locks, error) {
 		splitted := strings.Split(fileName, ".")
 
 		if len(splitted) != 5 {
-			return nil, errorutils.CheckError(fmt.Errorf("Failed while parsing the file name: %s located at: %s. Expecting a different format.", fileName, path))
+			return nil, errorutils.WrapError(fmt.Errorf("Failed while parsing the file name: %s located at: %s. Expecting a different format.", fileName, path))
 		}
 		// Last element is the timestamp.
 		time, err := strconv.ParseInt(splitted[4], 10, 64)
 		if err != nil {
-			return nil, errorutils.CheckError(err)
+			return nil, errorutils.WrapError(err)
 		}
 		pid, err := strconv.Atoi(splitted[3])
 		if err != nil {
-			return nil, errorutils.CheckError(err)
+			return nil, errorutils.WrapError(err)
 		}
 		file := Lock{
 			currentTime: time,
@@ -209,7 +209,7 @@ func (lock *Lock) Unlock() error {
 	if exists {
 		err = os.Remove(lock.fileName)
 		if err != nil {
-			return errorutils.CheckError(err)
+			return errorutils.WrapError(err)
 		}
 	}
 	return nil
@@ -226,7 +226,7 @@ func CreateLock() (Lock, error) {
 	// Trying to acquire a lock for the running process.
 	err = lockFile.Lock()
 	if err != nil {
-		return *lockFile, errorutils.CheckError(err)
+		return *lockFile, errorutils.WrapError(err)
 	}
 	return *lockFile, nil
 }

@@ -59,7 +59,7 @@ func (dc *DeleteCommand) Run() error {
 
 func (dc *DeleteCommand) GetPathsToDelete() error {
 	rtDetails, err := dc.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return err
 	}
 	servicesManager, err := utils.CreateServiceManager(rtDetails, dc.DryRun())
@@ -83,7 +83,7 @@ func (dc *DeleteCommand) GetPathsToDelete() error {
 
 func (dc *DeleteCommand) DeleteFiles() (successCount, failedCount int, err error) {
 	rtDetails, err := dc.RtDetails()
-	if errorutils.CheckError(err) != nil {
+	if errorutils.WrapError(err) != nil {
 		return 0, 0, err
 	}
 	servicesManager, err := utils.CreateServiceManager(rtDetails, dc.DryRun())

@@ -43,15 +43,15 @@ func CreateBuildConfig(global, allowDeployment bool, confType utils.ProjectType)
 		err = gradleConfigeFile(configResult)
 	}
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	resBytes, err := yaml.Marshal(&configResult)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	err = ioutil.WriteFile(configFilePath, resBytes, 0644)
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	log.Info(confType.String() + " build config successfully created.")
 	return nil
@@ -190,7 +190,7 @@ func readDescriptors(deployer *utils.Repository) error {
 	}
 	err := descriptors.Read()
 	if err != nil {
-		return errorutils.CheckError(err)
+		return errorutils.WrapError(err)
 	}
 	vConfig := descriptors.GetResults()
 	deployer.DeployMavenDesc = vConfig.GetBool(utils.MAVEN_DESCRIPTOR)
