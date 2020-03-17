@@ -3001,6 +3001,7 @@ func TestArtifactoryBuildDiscard(t *testing.T) {
 
 	// Upload files with buildName and buildNumber
 	buildName := "jfrog-cli-discard-builds-test"
+	inttestutils.DeleteBuild(artifactoryDetails.Url, buildName, artHttpDetails)
 	for i := 1; i <= 5; i++ {
 		artifactoryCli.Exec("upload", "testsdata/a/a1.in", tests.Repo1+"/data/", "--build-name="+buildName, "--build-number="+strconv.Itoa(i))
 		artifactoryCli.Exec("build-publish", buildName, strconv.Itoa(i))
