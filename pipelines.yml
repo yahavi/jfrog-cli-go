@@ -13,6 +13,8 @@ pipelines:
         configuration:
           integrations:
             - name: myArtifactory
+          inputResources:
+            - name: jfrogCliGit
           sourceLocation: .
           outputLocation: .
           outputFile: .
