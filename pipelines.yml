@@ -9,14 +9,12 @@ pipelines:
   - name: JFrogCLI
     steps:
       - name: ArtifactoryTests
-        type: GoBuild
+        type: Bash
         configuration:
           integrations:
             - name: myArtifactory
           inputResources:
             - name: jfrogCliGit
-          sourceLocation: .
-          outputLocation: .
-          outputFile: .
-          repository: gocenter
-          goCommand: test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=int_myArtifactory_url --rt.user=int_myArtifactory_user --rt.password=int_myArtifactory_apikey
+        execution:
+          onExecute:
+            - test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=int_myArtifactory_url --rt.user=int_myArtifactory_user --rt.password=int_myArtifactory_apikey
