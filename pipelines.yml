@@ -10,9 +10,9 @@ pipelines:
     steps:
       - name: ArtifactoryTests
         type: GoBuild
-        integrations:
-          - name: myArtifactory  # may be required
         configuration:
+          integrations:
+            - name: myArtifactory
           sourceLocation: .
           outputLocation: .
           outputFile: .
