@@ -1,0 +1,22 @@
+resources:
+  - name: gitRepo
+    type: GitRepo
+    configuration:
+      path: yahavi/jfrog-cli
+      gitProvider: myGitHub
+
+pipelines:
+  - name: JFrogCLI
+    steps:
+      - name: ArtifactoryTests
+        type: GoBuild
+        integrations:
+          - name: myArtifactory  # may be required
+        configuration:
+          sourceLocation: .
+          outputLocation: .
+          outputFile: .
+          repository: go
+          goCommand: test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=int_myArtifactory_url --rt.user=int_myArtifactory_user --rt.password=int_myArtifactory_apikey
+        integrations:
+            - name: myArtifactory  # may be required
