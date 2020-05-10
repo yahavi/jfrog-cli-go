@@ -1,5 +1,5 @@
 resources:
-  - name: gitRepo
+  - name: jfrogCliGit
     type: GitRepo
     configuration:
       path: yahavi/jfrog-cli
