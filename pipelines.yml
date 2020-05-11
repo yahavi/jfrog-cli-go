@@ -8,16 +8,20 @@ resources:
 pipelines:
   - name: JFrogCLI
     steps:
-      - name: CliArtifactoryTests
+      - name: ArtifactoryTests
         type: Bash
         configuration:
           runtime:
             type: image
+            
             image:
-              auto:
-                language: go
-                versions:
-                  - "1.13.7"
+              custom:
+                name: docker.bintray.io/jfrog/pipelines-w19go
+                tag: 1.13
+              # auto:
+              #   language: go
+              #   versions:
+              #     - "1.13.7"
           integrations:
             - name: myArtifactory
           inputResources:
@@ -27,7 +31,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - go test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=$int_myArtifactory_url --rt.user=$int_myArtifactory_user --rt.password=$int_myArtifactory_apikey
 
-      - name: CliBintrayTests
+      - name: BintrayTests
         type: Bash
         configuration:
           runtime:
