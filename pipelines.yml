@@ -31,4 +31,4 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - pwd
             - env
-            - go test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=int_myArtifactory_url --rt.user=int_myArtifactory_user --rt.password=int_myArtifactory_apikey
+            - go test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=$int_myArtifactory_url --rt.user=$int_myArtifactory_user --rt.password=$int_myArtifactory_apikey
