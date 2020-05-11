@@ -18,6 +18,8 @@ pipelines:
                 language: go
                 versions:
                   - "1.13.7"
+              custom:
+                options: "-e GOPATH"
           environmentVariables:
             CI: "true"
           # integrations:
