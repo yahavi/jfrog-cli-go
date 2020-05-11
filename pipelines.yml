@@ -57,6 +57,7 @@ pipelines:
           onExecute:
             - npm --version
             - cd $res_jfrogCliGit_resourcePath
+            - sudo apt install nodejs
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
       # Maven tests
