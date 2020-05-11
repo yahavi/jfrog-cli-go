@@ -15,13 +15,13 @@ pipelines:
             type: image
             
             image:
-              custom:
-                name: docker.bintray.io/jfrog/pipelines-w19go
-                tag: "1.13.7"
-              # auto:
-              #   language: go
-              #   versions:
-              #     - "1.13.7"
+              # custom:
+              #   name: docker.bintray.io/jfrog/pipelines-w19go
+              #   tag: "1.13.7"
+              auto:
+                language: dotnetcore
+                versions:
+                  - "3.1"
           integrations:
             - name: myArtifactory
           inputResources:
