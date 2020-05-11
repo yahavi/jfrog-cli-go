@@ -71,6 +71,10 @@ pipelines:
           onExecute:
             - mvn --version
             - cd $res_jfrogCliGit_resourcePath
+            - curl -s "https://get.sdkman.io" | bash
+            - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
+            - export MAVEN_HOME=/home/appveyor/.sdkman/candidates/maven/current && sdk use maven 3.3.9 || sdk install maven 3.3.9
+            # - export GRADLE_HOME=/home/appveyor/.sdkman/candidates/gradle/current && sdk default gradle || sdk install gradle
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
       # Gradle tests
@@ -85,6 +89,9 @@ pipelines:
           onExecute:
             - gradle --version
             - cd $res_jfrogCliGit_resourcePath
+            - curl -s "https://get.sdkman.io" | bash
+            - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
+            - export GRADLE_HOME=/home/appveyor/.sdkman/candidates/gradle/current && sdk default gradle || sdk install gradle
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
       # Go tests
@@ -97,7 +104,7 @@ pipelines:
             - name: jfrogCliGit
         execution:
           onExecute:
-            - gradle --version
+            - go version
             - cd $res_jfrogCliGit_resourcePath
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.go -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
@@ -113,7 +120,7 @@ pipelines:
           onExecute:
             - pip --version
             - cd $res_jfrogCliGit_resourcePath
-            - python -m venv pip-venv
+            - python -m virtualenv pip-venv
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
       
       # Distribution tests
