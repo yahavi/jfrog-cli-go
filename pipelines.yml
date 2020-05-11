@@ -69,12 +69,11 @@ pipelines:
             - name: jfrogCliGit
         execution:
           onExecute:
-            - mvn --version
             - cd $res_jfrogCliGit_resourcePath
             - curl -s "https://get.sdkman.io" | bash
             - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
             - export MAVEN_HOME=/home/appveyor/.sdkman/candidates/maven/current && sdk use maven 3.3.9 || sdk install maven 3.3.9
-            # - export GRADLE_HOME=/home/appveyor/.sdkman/candidates/gradle/current && sdk default gradle || sdk install gradle
+            - mvn --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
       # Gradle tests
@@ -87,11 +86,11 @@ pipelines:
             - name: jfrogCliGit
         execution:
           onExecute:
-            - gradle --version
             - cd $res_jfrogCliGit_resourcePath
             - curl -s "https://get.sdkman.io" | bash
             - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
             - export GRADLE_HOME=/home/appveyor/.sdkman/candidates/gradle/current && sdk default gradle || sdk install gradle
+            - gradle --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
       # Go tests
