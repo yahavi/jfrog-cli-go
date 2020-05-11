@@ -55,5 +55,76 @@ pipelines:
             - name: jfrogCliGit
         execution:
           onExecute:
+            - npm --version
             - cd $res_jfrogCliGit_resourcePath
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
+
+      # Maven tests
+      - name: Maven
+        type: Bash
+        configuration:
+          integrations:
+            - name: myArtifactory
+          inputResources:
+            - name: jfrogCliGit
+        execution:
+          onExecute:
+            - mvn --version
+            - cd $res_jfrogCliGit_resourcePath
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
+
+      # Gradle tests
+      - name: Gradle
+        type: Bash
+        configuration:
+          integrations:
+            - name: myArtifactory
+          inputResources:
+            - name: jfrogCliGit
+        execution:
+          onExecute:
+            - gradle --version
+            - cd $res_jfrogCliGit_resourcePath
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
+
+      # Go tests
+      - name: Go
+        type: Bash
+        configuration:
+          integrations:
+            - name: myArtifactory
+          inputResources:
+            - name: jfrogCliGit
+        execution:
+          onExecute:
+            - gradle --version
+            - cd $res_jfrogCliGit_resourcePath
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.go -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
+
+      # Pip tests
+      - name: Pip
+        type: Bash
+        configuration:
+          integrations:
+            - name: myArtifactory
+          inputResources:
+            - name: jfrogCliGit
+        execution:
+          onExecute:
+            - pip --version
+            - cd $res_jfrogCliGit_resourcePath
+            - python -m venv pip-venv
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
+      
+      # Distribution tests
+      # - name: Pip
+      #   type: Bash
+      #   configuration:
+      #     integrations:
+      #       - name: myArtifactory
+      #     inputResources:
+      #       - name: jfrogCliGit
+      #   execution:
+      #     onExecute:
+      #       - cd $res_jfrogCliGit_resourcePath
+      #       - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.distribution -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
