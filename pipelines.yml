@@ -11,9 +11,9 @@ pipelines:
       - name: ArtifactoryTests
         type: Bash
         configuration:
-        environmentVariables:
-          GOPATH:
-          GOROOT:
+          environmentVariables:
+            GOPATH:
+            GOROOT:
           runtime:
             type: image
             image:
