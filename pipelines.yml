@@ -18,8 +18,6 @@ pipelines:
                 language: go
                 versions:
                   - "1.13.7"
-          environmentVariables:
-            CI: "true"
           integrations:
             - name: myArtifactory
           inputResources:
@@ -39,8 +37,6 @@ pipelines:
                 language: go
                 versions:
                   - "1.13.7"
-          environmentVariables:
-            CI: "true"
           integrations:
             - name: myArtifactory
             - name: bintray
@@ -49,4 +45,4 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=$int_myArtifactory_url --rt.user=$int_myArtifactory_user --rt.password=$int_myArtifactory_apikey --bt.user=$int_bintray_user --bt.key=$int_binray_key
+            - go test -v github.com/jfrog/jfrog-cli -test.bintray --timeout 0 --rt.url=$int_myArtifactory_url --rt.user=$int_myArtifactory_user --rt.password=$int_myArtifactory_apikey --bt.user=$int_bintray_user --bt.key=$int_binray_key
