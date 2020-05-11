@@ -9,8 +9,15 @@ pipelines:
   - name: JFrogCLI
     steps:
       - name: ArtifactoryTests
-        type: Bash
+        # type: Bash
         configuration:
+          runtime:
+            type: image
+            image:
+              auto:
+                language: go
+                versions:
+                  - "1.13.7"
           environmentVariables:
             CI: "true"
           # integrations:
