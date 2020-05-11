@@ -74,7 +74,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
-            - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
+            - source "$HOME/.sdkman/bin/sdkman-init.sh"
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - mvn --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
@@ -92,7 +92,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
-            - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
+            - source "$HOME/.sdkman/bin/sdkman-init.sh"
             - sdk default gradle || sdk install gradle
             - gradle --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
