@@ -20,8 +20,8 @@ pipelines:
                   - "1.13.7"
           environmentVariables:
             CI: "true"
-            GOPATH:
-            GOROOT:
+            GOPATH: ""
+            GOROOT: ""
           # integrations:
           #   - name: myArtifactory
           inputResources:
