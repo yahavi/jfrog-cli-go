@@ -17,7 +17,7 @@ pipelines:
             image:
               custom:
                 name: docker.bintray.io/jfrog/pipelines-w19go
-                tag: "1.13"
+                tag: "1.13.7"
               # auto:
               #   language: go
               #   versions:
