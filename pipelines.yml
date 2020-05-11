@@ -56,6 +56,7 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
+            - curl -sL https://deb.nodesource.com/setup_11.x | sudo bash -
             - sudo apt install nodejs
             - npm --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
@@ -71,6 +72,7 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
+            - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
             - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
             - export MAVEN_HOME=/home/appveyor/.sdkman/candidates/maven/current && sdk use maven 3.3.9 || sdk install maven 3.3.9
@@ -88,6 +90,7 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
+            - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
             - source "/home/appveyor/.sdkman/bin/sdkman-init.sh"
             - export GRADLE_HOME=/home/appveyor/.sdkman/candidates/gradle/current && sdk default gradle || sdk install gradle
@@ -121,7 +124,7 @@ pipelines:
             - pip --version
             - cd $res_jfrogCliGit_resourcePath
             - python -m virtualenv pip-venv
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.pipVirtualEnv=${res_jfrogCliGit_resourcePath}/pip-venv/Scripts -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
       
       # Distribution tests
       # - name: Pip
