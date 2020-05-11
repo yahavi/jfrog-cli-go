@@ -7,7 +7,7 @@ resources:
 
 pipelines:
   # Global configuration
-  - name: JFrogCLI
+  - name: TestCLI
     configuration:
       runtime:
         type: image
@@ -19,7 +19,7 @@ pipelines:
     
     steps:
       # Artifactory tests
-      - name: ArtifactoryTests
+      - name: Artifactory
         type: Bash
         configuration:
           integrations:
@@ -29,10 +29,10 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.artifactory -rt.url=$JFROG_CLI_RT_URL -rt.user=$JFROG_CLI_RT_USER -rt.password=$JFROG_CLI_RT_PASSWORD
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.artifactory -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
 
       # Bintray tests
-      - name: BintrayTests
+      - name: Bintray
         type: Bash
         configuration:
           integrations:
@@ -43,10 +43,10 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.bintray -rt.url=$JFROG_CLI_RT_URL -rt.user=$JFROG_CLI_RT_USER -rt.password=$JFROG_CLI_RT_PASSWORD -bt.user=$int_bintray_user -bt.key=$int_bintray_key
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.bintray -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey --bt.user=$int_bintray_user -bt.key=$int_bintray_key
 
       # Npm tests
-      - name: NpmTests
+      - name: Npm
         type: Bash
         configuration:
           integrations:
@@ -56,4 +56,4 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$JFROG_CLI_RT_URL -rt.user=$JFROG_CLI_RT_USER -rt.password=$JFROG_CLI_RT_PASSWORD
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_myArtifactory_url -rt.user=$int_myArtifactory_user -rt.password=$int_myArtifactory_apikey
