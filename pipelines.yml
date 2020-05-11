@@ -15,13 +15,14 @@ pipelines:
             language: go
             versions:
               - "1.13.7"
-      integrations:
-        - name: myArtifactory
-      inputResources:
-        - name: jfrogCliGit
     steps:
       - name: ArtifactoryTests
         type: Bash
+        configuration:
+          integrations:
+            - name: myArtifactory
+          inputResources:
+            - name: jfrogCliGit
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
