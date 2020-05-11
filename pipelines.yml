@@ -12,7 +12,7 @@ pipelines:
         type: Bash
         configuration:
           environmentVariables:
-            CI: true
+            CI: "true"
           integrations:
             - name: myArtifactory
           inputResources:
