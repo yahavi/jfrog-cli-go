@@ -11,9 +11,6 @@ pipelines:
       - name: ArtifactoryTests
         type: Bash
         configuration:
-          environmentVariables:
-            GOPATH:
-            GOROOT:
           runtime:
             type: image
             image:
@@ -23,6 +20,8 @@ pipelines:
                   - "1.13.7"
           environmentVariables:
             CI: "true"
+            GOPATH:
+            GOROOT:
           # integrations:
           #   - name: myArtifactory
           inputResources:
