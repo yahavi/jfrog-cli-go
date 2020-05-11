@@ -18,14 +18,13 @@ pipelines:
                 language: go
                 versions:
                   - $GO_VERSION
-    steps:
-      - name: ArtifactoryTests
-        type: Bash
-        configuration:
-          integrations:
+        integrations:
             - name: myArtifactory
           inputResources:
             - name: jfrogCliGit
+    steps:
+      - name: ArtifactoryTests
+        type: Bash
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
@@ -33,13 +32,6 @@ pipelines:
       - name: BintrayTests
         type: Bash
         configuration:
-          runtime:
-            type: image
-            image:
-              auto:
-                language: go
-                versions:
-                  - $GO_VERSION
           integrations:
             - name: myArtifactory
             - name: bintray
