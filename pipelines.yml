@@ -13,8 +13,8 @@ pipelines:
         configuration:
           environmentVariables:
             CI: "true"
-          integrations:
-            - name: myArtifactory
+          # integrations:
+          #   - name: myArtifactory
           inputResources:
             - name: jfrogCliGit
         execution:
