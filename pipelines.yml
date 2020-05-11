@@ -9,7 +9,7 @@ pipelines:
   - name: JFrogCLI
     steps:
       - name: ArtifactoryTests
-        # type: Bash
+        type: Bash
         configuration:
           runtime:
             type: image
