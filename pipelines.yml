@@ -20,10 +20,8 @@ pipelines:
                   - "1.13.7"
           environmentVariables:
             CI: "true"
-            GOPATH: ""
-            GOROOT: ""
-          # integrations:
-          #   - name: myArtifactory
+          integrations:
+            - name: myArtifactory
           inputResources:
             - name: jfrogCliGit
         execution:
