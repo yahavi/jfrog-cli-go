@@ -31,7 +31,7 @@ pipelines:
           onExecute:
             - env
             - cd $res_jfrogCliGit_resourcePath
-            - `$COMMON_TESTS_ARGS`
+            - $COMMON_TESTS_ARGS
       # - name: BintrayTests
       #   type: Bash
       #   configuration:
