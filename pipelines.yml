@@ -26,7 +26,7 @@ pipelines:
             - name: jfrogCliGit
         execution:
           onExecute:
-            - unset GOROOT GOPATH
+            # - unset GOROOT GOPATH
             - jfrog --version
             - cd $res_src_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=int_myArtifactory_url --rt.user=int_myArtifactory_user --rt.password=int_myArtifactory_apikey
+            - unset GOROOT GOPATH && go test -v github.com/jfrog/jfrog-cli -test.artifactory --timeout 0 --rt.url=int_myArtifactory_url --rt.user=int_myArtifactory_user --rt.password=int_myArtifactory_apikey
