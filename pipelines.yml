@@ -11,6 +11,8 @@ pipelines:
       - name: ArtifactoryTests
         type: Bash
         configuration:
+          environmentVariables:
+            CI: true
           integrations:
             - name: myArtifactory
           inputResources:
