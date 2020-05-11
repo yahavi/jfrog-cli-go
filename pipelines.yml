@@ -4,6 +4,14 @@ resources:
     configuration:
       path: yahavi/jfrog-cli
       gitProvider: myGitHub
+  - name: goImage
+    type: image
+    configuration:
+      image:
+        auto:
+          language: go
+          versions:
+            - "1.13.7"
 
 pipelines:
   - name: JFrogCLI
@@ -12,16 +20,7 @@ pipelines:
         type: Bash
         configuration:
           runtime:
-            type: image
-            
-            image:
-              # custom:
-              #   name: docker.bintray.io/jfrog/pipelines-w19go
-              #   tag: "1.13.7"
-              auto:
-                language: dotnetcore
-                versions:
-                  - "3.1"
+            - name: goImage
           integrations:
             - name: myArtifactory
           inputResources:
