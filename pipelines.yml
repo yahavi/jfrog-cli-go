@@ -61,17 +61,17 @@ pipelines:
             - npm --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
-      # Java
-        - name: InstallJava
-          type: Bash
-          execution:
-            onExecute:
-              - sudo apt install zip
-              - curl -s "https://get.sdkman.io" | bash
-              - source "$HOME/.sdkman/bin/sdkman-init.sh"
-              - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
-              - sdk use maven 3.3.9 || sdk install maven 3.3.9
-              - sdk default gradle || sdk install gradle
+      # Install Maven and Gradle
+      - name: InstallJava
+        type: Bash
+        execution:
+          onExecute:
+            - sudo apt install zip
+            - curl -s "https://get.sdkman.io" | bash
+            - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
+            - sdk use maven 3.3.9 || sdk install maven 3.3.9
+            - sdk default gradle || sdk install gradle
 
       # Maven tests
       - name: Maven
