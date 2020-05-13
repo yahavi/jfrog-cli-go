@@ -16,7 +16,7 @@ pipelines:
             language: go
             versions:
               - "1.13.7"
-    
+
     steps:
       # Artifactory tests
       - name: Artifactory
@@ -64,6 +64,8 @@ pipelines:
       # Install Maven and Gradle
       - name: InstallJava
         type: Bash
+        configuration:
+          affinityGroup: java
         execution:
           onExecute:
             - sudo apt install zip
@@ -81,8 +83,9 @@ pipelines:
             - name: artifactory
           inputResources:
             - name: jfrogCliGit
+          affinityGroup: java
           inputSteps:
-             - name: InstallJava
+            - name: InstallJava
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
@@ -102,8 +105,9 @@ pipelines:
             - name: artifactory
           inputResources:
             - name: jfrogCliGit
+          affinityGroup: java
           inputSteps:
-             - name: InstallJava
+            - name: InstallJava
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
@@ -143,7 +147,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - python -m virtualenv pip-venv
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.pipVirtualEnv=${res_jfrogCliGit_resourcePath}/pip-venv/Scripts -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-      
+
       # Distribution tests
       - name: Distribution
         type: Bash
