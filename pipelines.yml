@@ -65,8 +65,8 @@ pipelines:
       - name: InstallJava
         type: Bash
         configuration:
-          integrations:
-            - name: artifactory
+          inputResources:
+            - name: jfrogCliGit
           affinityGroup: java
         execution:
           onExecute:
