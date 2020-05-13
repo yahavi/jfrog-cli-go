@@ -65,6 +65,8 @@ pipelines:
       - name: InstallJava
         type: Bash
         configuration:
+          integrations:
+            - name: artifactory
           affinityGroup: java
         execution:
           onExecute:
