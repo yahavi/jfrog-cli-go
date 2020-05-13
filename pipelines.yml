@@ -91,6 +91,7 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
+            - sdk use maven 3.3.9 || sdk install maven 3.3.9
             # - sudo apt install zip
             # - curl -s "https://get.sdkman.io" | bash
             # - source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -113,6 +114,7 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
+            - sdk default gradle || sdk install gradle
             # - sudo apt install zip
             # - curl -s "https://get.sdkman.io" | bash
             # - source "$HOME/.sdkman/bin/sdkman-init.sh"
