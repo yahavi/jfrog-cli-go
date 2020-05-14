@@ -80,6 +80,7 @@ pipelines:
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - sdk default gradle || sdk install gradle
             - add_pipeline_files "$SDKMAN_DIR" sdkman
+            
 
       # Maven tests
       - name: Maven
