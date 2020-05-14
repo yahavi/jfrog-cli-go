@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       path: yahavi/jfrog-cli
-      gitProvider: myGitHub
+      gitProvider: github
 
 pipelines:
   # Global configuration
