@@ -16,9 +16,6 @@ pipelines:
             language: go
             versions:
               - "1.13.7"
-      environmentVariables:
-        readOnly:
-          SDKMAN_DIR: $res_jfrogCliGit_resourcePath/.sdkman
 
     steps:
       # # Artifactory tests
@@ -75,10 +72,11 @@ pipelines:
           onExecute:
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
-            - source "$res_jfrogCliGit_resourcePath/.sdkman/bin/sdkman-init.sh"
+            - source "$HOME/.sdkman/bin/sdkman-init.sh"
             - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - sdk default gradle || sdk install gradle
+            - add_pipelines_files sdkman $HOME/.sdkman
 
       # Maven tests
       - name: Maven
@@ -93,8 +91,15 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
+            - restore_pipelines_files $HOME/.sdkman sdkman
             - cd $res_jfrogCliGit_resourcePath
-            - source "$res_jfrogCliGit_resourcePath/.sdkman/bin/sdkman-init.sh"
+            - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            - sdk use maven 3.3.9 || sdk install maven 3.3.9
+            # - sudo apt install zip
+            # - curl -s "https://get.sdkman.io" | bash
+            # - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            # - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
+            # - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - mvn --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
@@ -111,8 +116,15 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
+            - restore_pipelines_files $HOME/.sdkman sdkman
             - cd $res_jfrogCliGit_resourcePath
-            - source "$res_jfrogCliGit_resourcePath/.sdkman/bin/sdkman-init.sh"
+            - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            - sdk default gradle || sdk install gradle
+            # - sudo apt install zip
+            # - curl -s "https://get.sdkman.io" | bash
+            # - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            # - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
+            # - sdk default gradle || sdk install gradle
             - gradle --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
