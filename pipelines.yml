@@ -76,7 +76,7 @@ pipelines:
             - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - sdk default gradle || sdk install gradle
-            - add_pipelines_files sdkman $HOME/.sdkman
+            - add_pipeline_files sdkman $HOME/.sdkman
 
       # Maven tests
       - name: Maven
@@ -91,7 +91,7 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
-            - restore_pipelines_files $HOME/.sdkman sdkman
+            - restore_pipeline_files $HOME/.sdkman sdkman
             - cd $res_jfrogCliGit_resourcePath
             - source "$HOME/.sdkman/bin/sdkman-init.sh"
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
@@ -116,7 +116,7 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
-            - restore_pipelines_files $HOME/.sdkman sdkman
+            - restore_pipeline_files $HOME/.sdkman sdkman
             - cd $res_jfrogCliGit_resourcePath
             - source "$HOME/.sdkman/bin/sdkman-init.sh"
             - sdk default gradle || sdk install gradle
