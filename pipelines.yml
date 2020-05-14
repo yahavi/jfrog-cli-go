@@ -16,6 +16,9 @@ pipelines:
             language: go
             versions:
               - "1.13.7"
+      environmentVariables:
+        readOnly:
+          SDKMAN_DIR: $HOME/sdkman
 
     steps:
       # # Artifactory tests
@@ -72,11 +75,11 @@ pipelines:
           onExecute:
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
-            - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            - source "$SDKMAN_DIR/bin/sdkman-init.sh"
             - sdk install java `sdk list java | grep -E "8.*-zulu" | head -1 | awk '{print $NF}'` && java -version
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - sdk default gradle || sdk install gradle
-            - add_pipeline_files sdkman "$HOME/.sdkman"
+            - add_pipeline_files sdkman "$SDKMAN_DIR"
 
       # Maven tests
       - name: Maven
@@ -91,9 +94,9 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
-            - restore_pipeline_files "$HOME/.sdkman" sdkman
+            - restore_pipeline_files "$SDKMAN_DIR" sdkman
             - cd $res_jfrogCliGit_resourcePath
-            - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            - source "$SDKMAN_DIR/bin/sdkman-init.sh"
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             # - sudo apt install zip
             # - curl -s "https://get.sdkman.io" | bash
@@ -116,9 +119,9 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
-            - restore_pipeline_files "$HOME/.sdkman" sdkman
+            - restore_pipeline_files "$SDKMAN_DIR" sdkman
             - cd $res_jfrogCliGit_resourcePath
-            - source "$HOME/.sdkman/bin/sdkman-init.sh"
+            - source "$SDKMAN_DIR/bin/sdkman-init.sh"
             - sdk default gradle || sdk install gradle
             # - sudo apt install zip
             # - curl -s "https://get.sdkman.io" | bash
