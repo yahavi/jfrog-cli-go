@@ -80,7 +80,6 @@ pipelines:
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
             - sdk default gradle || sdk install gradle
             - add_pipeline_files "$SDKMAN_DIR" sdkman
-            
 
       # Maven tests
       - name: Maven
@@ -131,7 +130,6 @@ pipelines:
             # - sdk default gradle || sdk install gradle
             - gradle --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-
       # # Go tests
       # - name: Go
       #   type: Bash
@@ -145,7 +143,6 @@ pipelines:
       #       - go version
       #       - cd $res_jfrogCliGit_resourcePath
       #       - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.go -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-
       # # Pip tests
       # - name: Pip
       #   type: Bash
@@ -160,7 +157,6 @@ pipelines:
       #       - cd $res_jfrogCliGit_resourcePath
       #       - python -m virtualenv pip-venv
       #       - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.pipVirtualEnv=${res_jfrogCliGit_resourcePath}/pip-venv/Scripts -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-
       # # Distribution tests
       # - name: Distribution
       #   type: Bash
