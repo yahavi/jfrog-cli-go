@@ -20,7 +20,6 @@ pipelines:
         readOnly:
           SDKMAN_DIR: $HOME/sdkman
 
-
     steps:
       # # Artifactory tests
       # - name: Artifactory
