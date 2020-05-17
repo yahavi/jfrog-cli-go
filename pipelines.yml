@@ -103,7 +103,7 @@ pipelines:
             - mvn --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
-      Gradle tests
+      # Gradle tests
       - name: Gradle
         type: Bash
         configuration:
