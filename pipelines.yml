@@ -68,7 +68,7 @@ pipelines:
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
       # Install Maven and Gradle
-      - name: InstallJava
+      - name: Java
         type: Bash
         configuration:
           inputResources:
@@ -151,7 +151,7 @@ pipelines:
           onExecute:
             - pip --version
             - cd $res_jfrogCliGit_resourcePath
-            - python -m virtualenv pip-venv
+            - virtualenv pip-venv
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.pipVirtualEnv=${res_jfrogCliGit_resourcePath}/pip-venv/Scripts -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
       
       # Distribution tests
