@@ -95,7 +95,7 @@ pipelines:
             - name: InstallJava
         execution:
           onExecute:
-            - restore_run_files "$SDKMAN_DIR" sdkman
+            - restore_run_files sdkman "$SDKMAN_DIR" 
             - cd $res_jfrogCliGit_resourcePath
             - source "$SDKMAN_DIR/bin/sdkman-init.sh"
             - sdk use maven 3.3.9 || sdk install maven 3.3.9
