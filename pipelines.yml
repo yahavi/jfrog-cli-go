@@ -74,8 +74,8 @@ pipelines:
           inputResources:
             - name: jfrogCliGit
         execution:
-          onStart:
-            - restore_cache_files sdkman "$SDKMAN_DIR"
+          # onStart:
+          #   - restore_cache_files sdkman "$SDKMAN_DIR"
           onExecute:
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
@@ -85,7 +85,7 @@ pipelines:
             - sdk install gradle
           onComplete:
             - add_run_files "$SDKMAN_DIR" sdkman
-            - add_cache_files "$SDKMAN_DIR" sdkman
+            # - add_cache_files "$SDKMAN_DIR" sdkman
 
       # Maven tests
       - name: Maven
