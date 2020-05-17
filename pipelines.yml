@@ -5,7 +5,6 @@ resources:
       path: yahavi/jfrog-cli
       gitProvider: github
 
-
 pipelines:
   # Global configuration
   - name: TestCLI
@@ -149,8 +148,9 @@ pipelines:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - pip --version
-            - virtualenv pip-venv
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.pipVirtualEnv=${res_jfrogCliGit_resourcePath}/pip-venv/Scripts -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
+            - virtualenv .venv
+            - source .venv/bin/activate
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
       
       # Distribution tests
       - name: Distribution
