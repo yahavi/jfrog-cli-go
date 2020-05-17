@@ -96,7 +96,7 @@ pipelines:
           inputResources:
             - name: jfrogCliGit
           inputSteps:
-            - name: InstallJava
+            - name: Java
         execution:
           onStart:
             - restore_run_files sdkman "$SDKMAN_DIR" 
@@ -115,7 +115,7 @@ pipelines:
           inputResources:
             - name: jfrogCliGit
           inputSteps:
-            - name: InstallJava
+            - name: Java
         execution:
           onStart:
             - restore_run_files sdkman "$SDKMAN_DIR" 
