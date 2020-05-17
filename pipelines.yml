@@ -81,6 +81,7 @@ pipelines:
             - sdk default gradle || sdk install gradle
             - add_cache_files "$SDKMAN_DIR" sdkman
 
+
       # Maven tests
       - name: Maven
         type: Bash
