@@ -71,7 +71,6 @@ pipelines:
         configuration:
           inputResources:
             - name: jfrogCliGit
-          affinityGroup: java
         execution:
           onExecute:
             - sudo apt install zip
@@ -91,7 +90,6 @@ pipelines:
             - name: artifactory
           inputResources:
             - name: jfrogCliGit
-          affinityGroup: java
           inputSteps:
             - name: InstallJava
         execution:
@@ -111,7 +109,6 @@ pipelines:
             - name: artifactory
           inputResources:
             - name: jfrogCliGit
-          affinityGroup: java
           inputSteps:
             - name: InstallJava
         execution:
