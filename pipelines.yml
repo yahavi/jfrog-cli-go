@@ -5,6 +5,7 @@ resources:
       path: yahavi/jfrog-cli
       gitProvider: github
 
+
 pipelines:
   # Global configuration
   - name: TestCLI
