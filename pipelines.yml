@@ -24,7 +24,7 @@ pipelines:
           M2_HOME: $SDKMAN_DIR/candidates/maven/current
 
     steps:
-      Artifactory tests
+      # Artifactory tests
       - name: Artifactory
         type: Bash
         configuration:
@@ -37,7 +37,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.artifactory -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
-      Bintray tests
+      # Bintray tests
       - name: Bintray
         type: Bash
         configuration:
@@ -67,7 +67,6 @@ pipelines:
             - npm --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
-
       # Install Maven and Gradle
       - name: Java
         type: Bash
@@ -75,8 +74,8 @@ pipelines:
           inputResources:
             - name: jfrogCliGit
         execution:
-          onStart:
-            - restore_cache_files sdkman_cache $SDKMAN_DIR
+          # onStart:
+          #   - restore_cache_files sdkman_cache $SDKMAN_DIR
           onExecute:
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
@@ -85,8 +84,8 @@ pipelines:
             - sdk install maven 3.3.9
             - sdk install gradle
           onComplete:
-            # - add_run_files $SDKMAN_DIR sdkman
-            - add_cache_files $SDKMAN_DIR sdkman_cache
+            - add_run_files $SDKMAN_DIR sdkman
+            # - add_cache_files $SDKMAN_DIR sdkman_cache
 
       # Maven tests
       - name: Maven
