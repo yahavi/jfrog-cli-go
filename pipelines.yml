@@ -5,7 +5,6 @@ resources:
       path: yahavi/jfrog-cli
       gitProvider: github
 
-
 pipelines:
   # Global configuration
   - name: TestCLI
@@ -124,7 +123,7 @@ pipelines:
             - source "$SDKMAN_DIR/bin/sdkman-init.sh"
             - gradle --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-      
+
       # Go tests
       - name: Go
         type: Bash
@@ -138,7 +137,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - go version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.go -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-      
+
       # Pip tests
       - name: Pip
         type: Bash
@@ -154,7 +153,7 @@ pipelines:
             - virtualenv .venv
             - source .venv/bin/activate
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.pip -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
-      
+
       # Distribution tests
       - name: Distribution
         type: Bash
