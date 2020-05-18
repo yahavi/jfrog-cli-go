@@ -25,17 +25,17 @@ pipelines:
 
     steps:
       # Artifactory tests
-      - name: Artifactory
-        type: Bash
-        configuration:
-          integrations:
-            - name: artifactory
-          inputResources:
-            - name: jfrogCliGit
-        execution:
-          onExecute:
-            - cd $res_jfrogCliGit_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.artifactory -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
+      # - name: Artifactory
+      #   type: Bash
+      #   configuration:
+      #     integrations:
+      #       - name: artifactory
+      #     inputResources:
+      #       - name: jfrogCliGit
+      #   execution:
+      #     onExecute:
+      #       - cd $res_jfrogCliGit_resourcePath
+      #       - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.artifactory -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
       # Bintray tests
       # - name: Bintray
