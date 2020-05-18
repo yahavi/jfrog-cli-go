@@ -75,7 +75,7 @@ pipelines:
             - name: jfrogCliGit
         execution:
           onStart:
-            - restore_cache_files sdkman_cache $SDKMAN_DIR
+            - restore_cache_files sdkman $SDKMAN_DIR
           onExecute:
             - sudo apt install zip
             - curl -s "https://get.sdkman.io" | bash
@@ -99,7 +99,7 @@ pipelines:
             - name: Java
         execution:
           onStart:
-            - restore_run_files sdkman "$SDKMAN_DIR" 
+            - restore_run_files sdkman $SDKMAN_DIR
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - source "$SDKMAN_DIR/bin/sdkman-init.sh"
@@ -118,7 +118,7 @@ pipelines:
             - name: Java
         execution:
           onStart:
-            - restore_run_files sdkman "$SDKMAN_DIR" 
+            - restore_run_files sdkman $SDKMAN_DIR
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - source "$SDKMAN_DIR/bin/sdkman-init.sh"
