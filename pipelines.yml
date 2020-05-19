@@ -83,7 +83,7 @@ pipelines:
             - sdk install maven 3.3.9
             - sdk install gradle
             - add_run_files $SDKMAN_DIR sdkman
-          onComplete:
+          # onComplete:
             # - add_cache_files $SDKMAN_DIR sdkman_cache
 
       # Maven tests
