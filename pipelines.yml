@@ -22,6 +22,7 @@ pipelines:
           SDKMAN_DIR: $HOME/.sdkman
           M2_HOME: $SDKMAN_DIR/candidates/maven/current
 
+
     steps:
       # Artifactory tests
       - name: Artifactory
