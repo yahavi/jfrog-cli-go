@@ -19,7 +19,7 @@ pipelines:
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
-          SDKMAN_DIR: $HOME/.sdkman
+          SDKMAN_DIR: $HOME/sdkman
           M2_HOME: $SDKMAN_DIR/candidates/maven/current
 
     steps:
