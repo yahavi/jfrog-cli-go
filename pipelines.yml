@@ -105,24 +105,24 @@ pipelines:
             - mvn --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.maven -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
-      # Gradle tests
-      - name: Gradle
-        type: Bash
-        configuration:
-          integrations:
-            - name: artifactory
-          inputResources:
-            - name: jfrogCliGit
-          inputSteps:
-            - name: Java
-        execution:
-          onStart:
-            - restore_run_files sdkman $SDKMAN_DIR
-          onExecute:
-            - cd $res_jfrogCliGit_resourcePath
-            - source "$SDKMAN_DIR/bin/sdkman-init.sh"
-            - gradle --version
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
+      # # Gradle tests
+      # - name: Gradle
+      #   type: Bash
+      #   configuration:
+      #     integrations:
+      #       - name: artifactory
+      #     inputResources:
+      #       - name: jfrogCliGit
+      #     inputSteps:
+      #       - name: Java
+      #   execution:
+      #     onStart:
+      #       - restore_run_files sdkman $SDKMAN_DIR
+      #     onExecute:
+      #       - cd $res_jfrogCliGit_resourcePath
+      #       - source "$SDKMAN_DIR/bin/sdkman-init.sh"
+      #       - gradle --version
+      #       - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
       # Go tests
       - name: Go
