@@ -83,8 +83,8 @@ pipelines:
             - sdk install maven 3.3.9
             - sdk install gradle
             - add_run_files $SDKMAN_DIR sdkman
-          # onComplete:
-            # - add_cache_files $SDKMAN_DIR sdkman_cache
+          onComplete:
+            - add_pipeline_files sdkman_cache "$SDKMAN_DIR"
 
       # Maven tests
       - name: Maven
@@ -97,9 +97,9 @@ pipelines:
           inputSteps:
             - name: Java
         execution:
-          # onStart:
+          onStart:
+            - restore_pipeline_files sdkman "$SDKMAN_DIR"
           onExecute:
-            - restore_run_files sdkman $SDKMAN_DIR
             - cd $res_jfrogCliGit_resourcePath
             - source "$SDKMAN_DIR/bin/sdkman-init.sh"
             - mvn --version
