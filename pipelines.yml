@@ -84,7 +84,7 @@ pipelines:
             - sdk install gradle
             - add_run_files $SDKMAN_DIR sdkman
           onComplete:
-            - add_pipeline_files sdkman_cache "$SDKMAN_DIR"
+            - add_pipeline_files "$SDKMAN_DIR" sdkman_cache
 
       # Maven tests
       - name: Maven
