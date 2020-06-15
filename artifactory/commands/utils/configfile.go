@@ -89,8 +89,10 @@ func CreateBuildConfig(c *cli.Context, confType utils.ProjectType) (err error) {
 			err = configFile.configPip()
 		case utils.Npm:
 			err = configFile.configNpm()
+		case utils.Dotnet:
+			fallthrough
 		case utils.Nuget:
-			err = configFile.configNuget()
+			err = configFile.configDotnet()
 		case utils.Maven:
 			err = configFile.configMaven(c)
 		case utils.Gradle:
@@ -201,7 +203,7 @@ func (configFile *ConfigFile) configNpm() error {
 	return configFile.setDeployerResolver()
 }
 
-func (configFile *ConfigFile) configNuget() error {
+func (configFile *ConfigFile) configDotnet() error {
 	return configFile.setResolver()
 }
 
@@ -426,7 +428,7 @@ func getServersIdAndDefault() ([]string, string, error) {
 }
 
 func getRepositories(serverId string, repoTypes ...utils.RepoType) ([]string, error) {
-	artDetails, err := config.GetArtifactoryConf(serverId)
+	artDetails, err := config.GetArtifactorySpecificConfig(serverId, false, true)
 	if err != nil {
 		return nil, err
 	}
