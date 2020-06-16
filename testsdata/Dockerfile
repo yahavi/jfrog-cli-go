@@ -8,7 +8,7 @@ ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 # Install prerequisites
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -y build-essential zip default-jdk curl python3-pip wget
+RUN DEBIAN_FRONTEND=noninteractive apt install -y wget zip curl git build-essential default-jdk python3-pip python3-venv
 
 # Configure python3 to be the default python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
