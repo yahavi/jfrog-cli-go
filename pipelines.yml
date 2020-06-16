@@ -133,4 +133,4 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password_apikey -rt.distUrl=$int_distribution_url
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password_apikey -rt.distUrl=$int_jfrog_dist_url
