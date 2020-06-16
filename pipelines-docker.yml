@@ -8,7 +8,7 @@ resources:
 pipelines:
   - name: BuildImage
     steps:
-      - name: Build image
+      - name: BuildImage
         type: Bash
         configuration:
           integrations:
