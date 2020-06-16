@@ -28,3 +28,6 @@ RUN apt install -y nodejs npm
 RUN curl -s "https://get.sdkman.io" | bash
 RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install maven 3.3.9
 RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install gradle
+
+# Install JFrog CLI
+RUN npm install -g jfrog-cli-go
