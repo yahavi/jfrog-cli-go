@@ -62,8 +62,6 @@ pipelines:
         execution:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - curl -sL https://deb.nodesource.com/setup_11.x | sudo bash -
-            - sudo apt install nodejs
             - npm --version
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.npm -rt.url=$int_artifactory_url -rt.user=$int_artifactory_user -rt.password=$int_artifactory_apikey
 
