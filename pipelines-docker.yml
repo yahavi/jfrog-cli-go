@@ -1,5 +1,5 @@
 resources:
-  - name: jfrogCliGit
+  - name: dockerImageGit
     type: GitRepo
     configuration:
       path: yahavi/jfrog-cli
@@ -14,9 +14,9 @@ pipelines:
           integrations:
             - name: yahav_docker
           inputResources:
-            - name: jfrogCliGit
+            - name: dockerImageGit
         execution:
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath/testsdata
+            - cd $res_dockerImageGit_resourcePath/testsdata
             - docker build -t yahavi/build-integration-env:1.0.0 .
             - docker push yahavi/build-integration-env:1.0.0
