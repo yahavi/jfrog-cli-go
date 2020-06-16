@@ -13,10 +13,8 @@ pipelines:
         type: image
         image:
           custom:
-            name: ecosysjfrog-docker-local.jfrog.io/jfrog-cli-test-image
+            name: yahavi/build-integration-env:1.0.0
             tag: 1.0.0
-            sourceRepository: docker-local
-            registry: artifactory
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
@@ -90,7 +88,7 @@ pipelines:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - gradle --version
-            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_artifactory_apikey
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_apikey
 
       # Go tests
       - name: Go
