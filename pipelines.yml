@@ -14,7 +14,7 @@ pipelines:
         image:
           custom:
             name: yahavi/build-integration-env
-            tag: 1.0.0
+            tag: latest
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
