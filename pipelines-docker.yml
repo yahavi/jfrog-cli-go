@@ -1,0 +1,22 @@
+resources:
+  - name: jfrogCliGit
+    type: GitRepo
+    configuration:
+      path: yahavi/jfrog-cli
+      gitProvider: github
+
+pipelines:
+  - name: BuildImage
+    steps:
+      - name: Artifactory
+        type: Bash
+        configuration:
+          integrations:
+            - name: yahav_docker
+          inputResources:
+            - name: jfrogCliGit
+        execution:
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath/testsdata
+            - docker build -t yahavi/build-integration-env:1.0.0 .
+            - docker push yahavi/build-integration-env:1.0.0
