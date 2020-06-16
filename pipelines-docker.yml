@@ -8,7 +8,7 @@ resources:
 pipelines:
   - name: BuildImage
     steps:
-      - name: Artifactory
+      - name: Build image
         type: Bash
         configuration:
           integrations:
@@ -17,6 +17,8 @@ pipelines:
             - name: dockerImageGit
         execution:
           onExecute:
-            - cd $res_dockerImageGit_resourcePath/testsdata
+            - cd $res_dockerImageGit_resourcePath
+            - git checkout pipelines
+            - cd testsdata
             - docker build -t yahavi/build-integration-env:1.0.0 .
             - docker push yahavi/build-integration-env:1.0.0
