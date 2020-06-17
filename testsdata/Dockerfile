@@ -20,7 +20,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN curl -sL https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN apt update
-RUN apt install -yq apt-transport-https dotnet-sdk-3.1 nuget
+RUN apt install -yq apt-transport-https dotnet-sdk-3.1 mono-devel
 
 # Install Java, Maven and Gradle
 RUN curl -s "https://get.sdkman.io" | bash
