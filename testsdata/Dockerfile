@@ -16,7 +16,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq ge
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# Install .NET, NuGet, Node.js and npm
+# Install .NET, NuGet
 RUN curl -sL https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN apt update

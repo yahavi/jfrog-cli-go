@@ -131,3 +131,16 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password -rt.distUrl=$int_jfrog_dist_url
 
+      # NuGet tests
+      - name: NuGet
+        type: Bash
+        configuration:
+          integrations:
+            - name: jfrog
+          inputResources:
+            - name: jfrogCliGit
+        execution:
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - nuget help
+            - go test -v github.com/jfrog/jfrog-cli --timeout 0 -test.nuget -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
