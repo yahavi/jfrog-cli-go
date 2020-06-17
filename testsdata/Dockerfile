@@ -4,8 +4,9 @@ SHELL ["/bin/bash", "-c"]
 
 # Environment variables
 ENV HOME /root
-ENV JAVA_HOME=/root/.sdkman/candidates/java/current
-ENV PATH=/root/.sdkman/candidates/java/current/bin:/root/.sdkman/candidates/maven/current/bin:/root/.sdkman/candidates/gradle/current/bin:/usr/lib/go-1.14/bin:${PATH}
+ENV JAVA_HOME /root/.sdkman/candidates/java/current
+ENV PATH /root/.sdkman/candidates/java/current/bin:/root/.sdkman/candidates/maven/current/bin:/root/.sdkman/candidates/gradle/current/bin:/usr/lib/go-1.14/bin:${PATH}
+ENV M2_HOME /root/.sdkman/candidates/maven 
 
 # Install prerequisites
 RUN apt update
