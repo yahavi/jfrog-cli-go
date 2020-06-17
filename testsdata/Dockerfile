@@ -8,9 +8,13 @@ ENV JAVA_HOME /root/.sdkman/candidates/java/current
 ENV PATH /root/.sdkman/candidates/java/current/bin:/root/.sdkman/candidates/maven/current/bin:/root/.sdkman/candidates/gradle/current/bin:/usr/lib/go-1.14/bin:${PATH}
 ENV M2_HOME /root/.sdkman/candidates/maven/current
 
+# Build time arguments
+ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true
+ARG DEBIAN_FRONTEND=noninteractive
+
 # Install prerequisites
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq gettext golang-1.14-go python3-pip python3-venv nodejs npm
+RUN apt install -yq zip unzip curl git uuid jq gettext golang-1.14-go python3-pip python3-venv nodejs npm
 
 # Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
