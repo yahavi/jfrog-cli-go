@@ -8,7 +8,7 @@ ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 # Install prerequisites
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip curl git uuid jq gettext default-jdk golang-1.14-go python3-pip python3-venv --no-install-recommends
+RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq gettext default-jdk golang-1.14-go python3-pip python3-venv --no-install-recommends
 
 # Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
