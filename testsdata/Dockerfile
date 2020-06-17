@@ -10,7 +10,7 @@ ENV M2_HOME /root/.sdkman/candidates/maven/current
 
 # Install prerequisites
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq gettext golang-1.14-go python3-pip python3-venv
+RUN DEBIAN_FRONTEND=noninteractive apt install -yq build-essential zip unzip curl git uuid jq gettext golang-1.14-go python3-pip python3-venv
 
 # Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
