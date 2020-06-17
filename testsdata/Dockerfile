@@ -29,5 +29,6 @@ RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install java `sdk list java
     && sdk install gradle
 
 # Clean up
+RUN sdk flush archives
 RUN apt autoremove
 RUN apt clean
