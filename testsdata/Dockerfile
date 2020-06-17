@@ -4,12 +4,12 @@ SHELL ["/bin/bash", "-c"]
 
 # Environment variables
 ENV HOME /root
-ENV JAVA_HOME=/usr/lib/jvm/default-java
-ENV PATH=/root/.sdkman/candidates/maven/current/bin:/root/.sdkman/candidates/gradle/current/bin:/usr/lib/go-1.14/bin:${PATH}
+ENV JAVA_HOME=/root/.sdkman/candidates/java/current
+ENV PATH=/root/.sdkman/candidates/java/current/bin:/root/.sdkman/candidates/maven/current/bin:/root/.sdkman/candidates/gradle/current/bin:/usr/lib/go-1.14/bin:${PATH}
 
 # Install prerequisites
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq gettext default-jdk golang-1.14-go python3-pip python3-venv
+RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq gettext golang-1.14-go python3-pip python3-venv
 
 # Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
@@ -22,10 +22,11 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 RUN apt update
 RUN apt install -yq apt-transport-https dotnet-sdk-3.1 nuget nodejs npm
 
-# Install Maven and Gradle
+# Install Java, Maven and Gradle
 RUN curl -s "https://get.sdkman.io" | bash
-RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install maven 3.3.9
-RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install gradle
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install java `sdk list java | grep -E "11.*-zulu" | head -1 | awk '{print $NF}'` && java -version \
+    && sdk install maven 3.3.9 \
+    && sdk install gradle
 
 # Clean up
 RUN apt autoremove
