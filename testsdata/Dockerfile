@@ -8,7 +8,7 @@ ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 # Install prerequisites
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip curl git uuid jq gettext default-jdk golang-1.14-go python3-pip python3-venv --no-install-recommends --no-cache
+RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip curl git uuid jq gettext default-jdk golang-1.14-go python3-pip python3-venv --no-install-recommends
 
 # Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
@@ -22,7 +22,7 @@ RUN curl -sL https://packages.microsoft.com/config/ubuntu/20.04/packages-microso
 RUN dpkg -i packages-microsoft-prod.deb
 RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 RUN apt update
-RUN apt install -yq apt-transport-https dotnet-sdk-3.1 nuget nodejs npm --no-install-recommends --no-cache
+RUN apt install -yq apt-transport-https dotnet-sdk-3.1 nuget nodejs npm --no-install-recommends
 
 # Install Maven and Gradle
 RUN curl -s "https://get.sdkman.io" | bash
