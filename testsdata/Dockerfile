@@ -10,9 +10,12 @@ ENV JAVA_HOME=/usr/lib/jvm/default-java
 RUN apt update
 RUN DEBIAN_FRONTEND=noninteractive apt install -y wget zip curl git uuid jq gettext default-jdk golang-1.14-go python3-pip python3-venv
 
-# Configure python3 and pip3 to be the default Python and Pip
+# Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Configure Go
+RUN ln -s /usr/lib/go-1.14/bin/go /usr/bin/go
 
 # Install .NET and NuGet
 RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
