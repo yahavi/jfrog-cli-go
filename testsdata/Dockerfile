@@ -27,9 +27,9 @@ RUN apt install -yq apt-transport-https dotnet-sdk-3.1 nuget nodejs npm
 RUN curl -s "https://get.sdkman.io" | bash
 RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install java `sdk list java | grep -E "11.*-zulu" | head -1 | awk '{print $NF}'` && java -version \
     && sdk install maven 3.3.9 \
-    && sdk install gradle
+    && sdk install gradle \
+    && sdk flush archives
 
 # Clean up
-RUN sdk flush archives
 RUN apt autoremove
 RUN apt clean
