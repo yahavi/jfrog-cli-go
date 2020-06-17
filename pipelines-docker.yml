@@ -20,5 +20,5 @@ pipelines:
             - cd $res_dockerImageGit_resourcePath
             - git checkout pipelines
             - cd testsdata
-            - docker build -t yahavi/build-integration-env:1.0.0 .
-            - docker push yahavi/build-integration-env:1.0.0
+            - docker build -t yahavi/build-integration-env:latest .
+            - docker push yahavi/build-integration-env:latest
