@@ -5,6 +5,7 @@ SHELL ["/bin/bash", "-c"]
 # Environment variables
 ENV HOME /root
 ENV JAVA_HOME=/usr/lib/jvm/default-java
+ENV PATH=/root/.sdkman/candidates/maven/current/bin:/root/.sdkman/candidates/gradle/current/bin:/usr/lib/go-1.14/bin:${PATH}
 
 # Install prerequisites
 RUN apt update
@@ -13,9 +14,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -yq zip unzip curl git uuid jq ge
 # Configure Python
 RUN ln -s /usr/bin/pip3 /usr/bin/pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
-
-# Configure Go
-RUN ln -s /usr/lib/go-1.14/bin/go /usr/bin/go
 
 # Install .NET, NuGet, Node.js and npm
 RUN curl -sL https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
