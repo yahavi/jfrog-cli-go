@@ -27,7 +27,7 @@ RUN curl -sL https://packages.microsoft.com/config/ubuntu/20.04/packages-microso
 RUN dpkg -i packages-microsoft-prod.deb
 RUN apt update
 RUN apt install -yq apt-transport-https dotnet-sdk-3.1 mono-devel
-RUN sudo dpkg --configure -a
+RUN dpkg --configure -a
 
 # Install Java, Maven and Gradle
 RUN curl -s "https://get.sdkman.io" | bash
