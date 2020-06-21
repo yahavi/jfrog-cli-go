@@ -143,5 +143,5 @@ pipelines:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - nuget help 2>&1 | head -1
-            - apt install dotnet-sdk-2.1
+            - apt install -yq dotnet-sdk-2.1
             - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.nuget -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
