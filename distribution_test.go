@@ -188,7 +188,7 @@ func TestBundleCopy(t *testing.T) {
 	cleanDistributionTest(t)
 }
 
-func TestBundleSetProperties(t *testing.T) {
+func TestSetPropsOnBundle(t *testing.T) {
 	initDistributionTest(t)
 
 	// Upload a file.
@@ -206,19 +206,25 @@ func TestBundleSetProperties(t *testing.T) {
 	assert.NoError(t, err)
 	artifactoryCli.Exec("sp", "prop=green", "--spec="+specFile, "--bundle="+bundleName+"/"+bundleVersion)
 
-	resultItems := searchItemsInArtifactory(t)
-	assert.NotZero(t, len(resultItems), "No artifacts were found.")
-	for _, item := range resultItems {
-		properties := item.Properties
-		assert.Equal(t, len(properties), 2, "Failed setting properties on item:", item.GetItemRelativePath())
-		for _, prop := range properties {
-			if prop.Key == "sha256" {
-				continue
-			}
-			assert.Equal(t, "prop", prop.Key, "Wrong property key")
-			assert.Equal(t, "green", prop.Value, "Wrong property value")
-		}
-	}
+	// Check that prop=green exist on a.in
+	checkProperty(t, "a.in")
+
+	cleanDistributionTest(t)
+}
+
+func TestCreateBundleWithProps(t *testing.T) {
+	initDistributionTest(t)
+
+	// Upload a file.
+	artifactoryCli.Exec("u", "testsdata/a/a1.in", tests.Repo1+"/a.in")
+
+	// Create release bundle
+	artifactoryCli.Exec("rbc", bundleName, bundleVersion, tests.Repo1+"/a.in", "--sign", "--props=prop=green")
+	artifactoryCli.Exec("rbd", bundleName, bundleVersion, "--site=*")
+	inttestutils.WaitForDistribution(t, bundleName, bundleVersion, artHttpDetails)
+
+	// Check that prop=green exist on a.in
+	checkProperty(t, "a.in")
 	cleanDistributionTest(t)
 }
 
@@ -279,7 +285,7 @@ func TestUpdateReleaseBundle(t *testing.T) {
 	inttestutils.VerifyLocalBundleExistence(t, bundleName, bundleVersion, true, artHttpDetails)
 
 	// Update release bundle to have b1.in
-	artifactoryCli.Exec("rbu", bundleName, bundleVersion, tests.Repo1+"/data/b1.in", "--sign")
+	artifactoryCli.Exec("rbu", bundleName, bundleVersion, tests.Repo1+"/data/b1.in", "--sign", "--props=prop=green")
 
 	// Distribute release bundle
 	artifactoryCli.Exec("rbd", bundleName, bundleVersion, "--site=*")
@@ -292,6 +298,9 @@ func TestUpdateReleaseBundle(t *testing.T) {
 	paths, _ := fileutils.ListFilesRecursiveWalkIntoDirSymlink(tests.Out, false)
 	err = tests.ValidateListsIdentical(tests.GetBuildSimpleDownload(), paths)
 	assert.NoError(t, err)
+
+	// Check that prop=green exist on b1.in
+	checkProperty(t, "b1.in")
 
 	// Cleanup
 	cleanDistributionTest(t)
@@ -321,4 +330,28 @@ func TestCreateBundleText(t *testing.T) {
 	}
 
 	cleanDistributionTest(t)
+}
+
+// Check that the artifact contains 'prop=green' property
+func checkProperty(t *testing.T, artifactName string) {
+	resultItems := searchItemsInArtifactory(t)
+	assert.NotZero(t, len(resultItems), "No artifacts were found.")
+	for _, item := range resultItems {
+		properties := item.Properties
+		if artifactName != item.Name {
+			// If the result item is not what we search for, make sure it doesn't contain the property
+			for _, prop := range properties {
+				assert.NotEqual(t, "prop", prop.Key)
+			}
+			continue
+		}
+		assert.Equal(t, len(properties), 2, "Failed setting properties on item:", item.GetItemRelativePath())
+		for _, prop := range properties {
+			if prop.Key != "prop" {
+				continue
+			}
+			assert.Equal(t, "prop", prop.Key, "Wrong property key")
+			assert.Equal(t, "green", prop.Value, "Wrong property value")
+		}
+	}
 }

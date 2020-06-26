@@ -1799,6 +1799,7 @@ func getReleaseBundleCreateUpdateFlags() []cli.Flag {
 			Name:  "exclusions",
 			Usage: "[Optional] Semicolon-separated list of exclusions. Exclusions can include the * and the ? wildcards.` `",
 		},
+		getPropertiesFlag("These properties will be added to the artifacts after distribution of the release bundle."),
 		getDistributionPassphraseFlag(),
 		getStoringRepositoryFlag(),
 	}...)
