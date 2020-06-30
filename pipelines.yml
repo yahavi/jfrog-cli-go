@@ -21,6 +21,8 @@ pipelines:
         readOnly:
           GOPROXY: https://gocenter.io
 
+
+          
     steps:
       # Artifactory tests
       - name: Artifactory
