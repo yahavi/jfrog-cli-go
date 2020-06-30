@@ -4,6 +4,8 @@ resources:
     configuration:
       path: yahavi/jfrog-cli
       gitProvider: github
+      buildOn:
+        pullRequestCreate: true
 
 pipelines:
   # Global configuration
