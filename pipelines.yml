@@ -35,11 +35,10 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_rt_url/api/security/token -d 'username=yahavi' -d 'expires_in=1800' | jq '.access_token' -r > rtToken
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
-            
       # Bintray tests
       - name: Bintray
         type: Bash
@@ -69,7 +68,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - npm --version
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
@@ -86,7 +85,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - mvn --version
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.maven -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.maven -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
@@ -103,7 +102,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - gradle --version
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
@@ -120,7 +119,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - go version
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
     
@@ -139,7 +138,7 @@ pipelines:
             - pip --version
             - python -m venv .venv
             - source .venv/bin/activate
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
       
@@ -173,6 +172,6 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - nuget help 2>&1 | head -1
             - apt install -yq dotnet-sdk-2.1
-            - go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.nuget -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
+            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.nuget -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.password=$int_jfrog_rt_password
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
