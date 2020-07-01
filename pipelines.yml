@@ -20,6 +20,7 @@ pipelines:
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
+          COMMON_TESTS_ARGS: env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0
 
     steps:
       # Artifactory tests
@@ -35,7 +36,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_rt_url/api/security/token -d 'username=yahavi' -d 'expires_in=1800' | jq '.access_token' -r > rtToken
-            - env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
+            - $COMMON_TESTS_ARGS -test.artifactory -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
