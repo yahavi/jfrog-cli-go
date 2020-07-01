@@ -23,6 +23,7 @@ pipelines:
           COMMON_TESTS_ARGS: > 
             "env\\ -u\\ int_jfrog_rt_password\\ go\\ test\\ -v\\ github.com/jfrog/jfrog-cli\\ -timeout\\ 0"
 
+            
     steps:
       # Artifactory tests
       - name: Artifactory
