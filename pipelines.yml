@@ -20,8 +20,7 @@ pipelines:
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
-          COMMON_TESTS_ARGS: > 
-            env -u int_jfrog_rt_password go test -v github.com/jfrog/jfrog-cli -timeout 0
+          COMMON_TESTS_ARGS: env+-u+int_jfrog_rt_password+go+test+-v+github.com%2Fjfrog%2Fjfrog-cli+-timeout+0
 
     steps:
       # Artifactory tests
