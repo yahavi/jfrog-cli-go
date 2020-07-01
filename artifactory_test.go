@@ -123,6 +123,9 @@ func getSshCredentials() string {
 }
 
 func TestArtifactorySimpleUploadSpec(t *testing.T) {
+	for _, pair := range os.Environ() {
+		fmt.Println(pair)
+	  }
 	initArtifactoryTest(t)
 	specFile, err := tests.CreateSpec(tests.UploadFlatRecursive)
 	assert.NoError(t, err)
