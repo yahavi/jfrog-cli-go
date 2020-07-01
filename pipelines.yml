@@ -39,6 +39,7 @@ pipelines:
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
+            
       # Bintray tests
       - name: Bintray
         type: Bash
