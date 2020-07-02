@@ -35,7 +35,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_rt_url/api/security/token -d 'username=$int_jfrog_rt_user' -d 'expires_in=1800' -d 'scope=api:*' | jq '.access_token' -r > rtToken
-            - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
+            - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
@@ -51,8 +51,7 @@ pipelines:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
-            - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_rt_url/api/security/token -d 'username=$int_jfrog_rt_user' -d 'expires_in=1800' -d 'scope=api:*' | jq '.access_token' -r > rtToken
-            - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.bintray -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken) -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey
+            - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.bintray -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
@@ -70,7 +69,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - npm --version
             - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_rt_url/api/security/token -d 'username=$int_jfrog_rt_user' -d 'expires_in=1800' -d 'scope=api:*' | jq '.access_token' -r > rtToken
-            - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
+            - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
@@ -184,4 +183,3 @@ pipelines:
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
 
-            
