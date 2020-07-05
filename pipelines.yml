@@ -20,7 +20,7 @@ pipelines:
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
-          JFROG_CLI_OFFER_CONFIG: false
+          JFROG_CLI_OFFER_CONFIG: "false"
 
     steps:
       # Artifactory tests
