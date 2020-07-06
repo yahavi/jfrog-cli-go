@@ -35,7 +35,7 @@ pipelines:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -69,7 +69,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - npm --version
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -87,7 +87,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - mvn --version
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.maven -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -105,7 +105,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - gradle --version
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -123,7 +123,7 @@ pipelines:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
             - go version
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -143,7 +143,7 @@ pipelines:
             - pip --version
             - python -m venv .venv
             - source .venv/bin/activate
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -160,7 +160,7 @@ pipelines:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
             - cd $res_jfrogCliGit_resourcePath
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken) -rt.distUrl=$int_jfrog_dist_url
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -179,7 +179,7 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - nuget help 2>&1 | head -1
             - apt install -yq dotnet-sdk-2.1
-            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
+            - ./build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800  | jq '.access_token' -r > rtToken
             - env -i PATH=$PATH HOME=$HOME `which go` test -v -timeout 0 -test.nuget -rt.url=$int_jfrog_rt_url -rt.user=$int_jfrog_rt_user -rt.accessToken=$(< rtToken)
           onComplete:
             - update_commit_status jfrogCliGit --context "$step_name"
