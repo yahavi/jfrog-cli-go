@@ -79,12 +79,17 @@ func TestGradleBuildWithServerIDWithUsesPlugin(t *testing.T) {
 	cleanGradleTest()
 }
 
+// This test check legacy behavior whereby the Gradle config yml contains the username, url and password.
 func TestGradleBuildWithCredentials(t *testing.T) {
-	if *tests.RtAccessToken != "" {
-		t.SkipNow()
-	}
-
 	initGradleTest(t)
+
+	if *tests.RtAccessToken != "" {
+		origUsername, origPassword := tests.SetBasicAuthFromAccessToken(t)
+		defer func() {
+			*tests.RtUser = origUsername
+			*tests.RtPassword = origPassword
+		}()
+	}
 
 	buildNumber := "1"
 	buildGradlePath := createGradleProject(t, "gradleproject")
