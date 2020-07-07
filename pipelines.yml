@@ -1,3 +1,10 @@
+commonConfiguration: &COMMON_CONFIGURATION
+  configuration:
+    integrations:
+      - name: jfrog
+    inputResources:
+      - name: jfrogCliGit
+
 resources:
   - name: jfrogCliGit
     type: GitRepo
@@ -26,11 +33,7 @@ pipelines:
       # Artifactory tests
       - name: Artifactory
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -44,11 +47,7 @@ pipelines:
       # Bintray tests
       - name: Bintray
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -60,11 +59,7 @@ pipelines:
       # Npm tests
       - name: Npm
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -78,11 +73,7 @@ pipelines:
       # Maven tests
       - name: Maven
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -96,11 +87,7 @@ pipelines:
       # Gradle tests
       - name: Gradle
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -114,11 +101,7 @@ pipelines:
       # Go tests
       - name: Go
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -132,11 +115,7 @@ pipelines:
       # Pip tests
       - name: Pip
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -152,11 +131,7 @@ pipelines:
       # Distribution tests
       - name: Distribution
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
@@ -170,11 +145,7 @@ pipelines:
       # NuGet tests
       - name: NuGet
         type: Bash
-        configuration:
-          integrations:
-            - name: jfrog
-          inputResources:
-            - name: jfrogCliGit
+        <<: *COMMON_CONFIGURATION
         execution:
           onExecute:
             - update_commit_status jfrogCliGit --context "$step_name"
