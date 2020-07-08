@@ -1,5 +1,6 @@
 # Set common JFrog integration and GitHub input source
 commonConfiguration: &COMMON_CONFIGURATION
+  type: Bash
   configuration:
     integrations:
       - name: jfrog
@@ -40,7 +41,6 @@ pipelines:
     steps:
       # Artifactory tests
       - name: Artifactory
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -51,7 +51,6 @@ pipelines:
 
       # Bintray tests
       - name: Bintray
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -61,7 +60,6 @@ pipelines:
 
       # Npm tests
       - name: Npm
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -73,7 +71,6 @@ pipelines:
 
       # Maven tests
       - name: Maven
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -85,7 +82,6 @@ pipelines:
 
       # Gradle tests
       - name: Gradle
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -97,7 +93,6 @@ pipelines:
 
       # Go tests
       - name: Go
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -109,7 +104,6 @@ pipelines:
 
       # Pip tests
       - name: Pip
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -123,7 +117,6 @@ pipelines:
 
       # Distribution tests
       - name: Distribution
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -135,7 +128,6 @@ pipelines:
 
       # NuGet tests
       - name: NuGet
-        type: Bash
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
