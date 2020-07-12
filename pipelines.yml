@@ -46,8 +46,6 @@ pipelines:
       # Artifactory tests
       - name: Artifactory
         <<: *COMMON_CONFIGURATION
-        configuration:
-          inputStep: Artifactory
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
