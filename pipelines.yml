@@ -57,6 +57,8 @@ pipelines:
       # Bintray tests
       - name: Bintray
         <<: *COMMON_CONFIGURATION
+        configuration:
+          affinityGroup: bintrayTest
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
