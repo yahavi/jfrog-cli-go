@@ -31,8 +31,8 @@ pipelines:
         type: image
         image:
           custom:
-            name: yahavi/build-integration-env
-            tag: latest
+            name: releases-docker.jfrog.io/jfrog-ecosystem-integration-env
+            tag: 1.0.0
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
