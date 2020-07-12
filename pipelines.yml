@@ -1,5 +1,5 @@
 # Set common JFrog integration and GitHub input source
-.: &COMMON_CONFIGURATION
+commonConfiguration: &COMMON_CONFIGURATION
   type: Bash
   configuration:
     integrations:
@@ -7,11 +7,11 @@
     inputResources:
       - name: jfrogCliGit
 
-.: &CREATE_RT_ACCESS_TOKEN
+createRtAccessToken: &CREATE_RT_ACCESS_TOKEN
   - ./build/build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800 | jq '.access_token' -r > rtToken
 
 # Update commit status in GitHub
-.: &UPDATE_COMMIT_STATUS
+updateCommitStatus: &UPDATE_COMMIT_STATUS
   onStart:
     - update_commit_status jfrogCliGit --context "$step_name"
   onComplete:
