@@ -50,7 +50,9 @@ pipelines:
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX 
+              -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
       # Bintray tests
       - name: Bintray
@@ -59,7 +61,9 @@ pipelines:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
-            - *TEST_PREFIX -test.bintray -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey
+            - |
+              *TEST_PREFIX 
+              -test.bintray -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey
 
       # Npm tests
       - name: Npm
@@ -70,7 +74,9 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - npm --version
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX 
+              -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
       # Maven tests
       - name: Maven
@@ -81,7 +87,9 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - mvn --version
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.maven -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX
+              -test.maven -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
       # Gradle tests
       - name: Gradle
@@ -92,7 +100,9 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - gradle --version
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.gradle -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX 
+              -test.gradle -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
       # Go tests
       - name: Go
@@ -103,7 +113,9 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - go version
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX 
+              -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
       # Pip tests
       - name: Pip
@@ -116,7 +128,9 @@ pipelines:
             - python -m venv .venv
             - source .venv/bin/activate
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX
+              -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
       # Distribution tests
       - name: Distribution
@@ -127,7 +141,9 @@ pipelines:
             - cd $res_jfrogCliGit_resourcePath
             - *CREATE_RT_ACCESS_TOKEN
             - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
-            - *TEST_PREFIX -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
+            - |
+              *TEST_PREFIX 
+              -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
 
       # NuGet tests
       - name: NuGet
@@ -139,4 +155,6 @@ pipelines:
             - nuget help 2>&1 | head -1
             - apt install -yq dotnet-sdk-2.1
             - *CREATE_RT_ACCESS_TOKEN
-            - *TEST_PREFIX -test.nuget -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+            - |
+              *TEST_PREFIX 
+              -test.nuget -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
