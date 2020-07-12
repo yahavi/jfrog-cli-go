@@ -2,7 +2,6 @@
 commonConfiguration: &COMMON_CONFIGURATION
   type: Bash
   configuration:
-    affinityGroup: artifactoryTests
     integrations:
       - name: jfrog
     inputResources:
@@ -46,6 +45,8 @@ pipelines:
       # Artifactory tests
       - name: Artifactory
         <<: *COMMON_CONFIGURATION
+        configuration:
+          affinityGroup: artifactoryTests
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -56,8 +57,6 @@ pipelines:
       # Bintray tests
       - name: Bintray
         <<: *COMMON_CONFIGURATION
-        configuration:
-          affinityGroup: bintrayTest
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -68,8 +67,9 @@ pipelines:
       - name: Npm
         <<: *COMMON_CONFIGURATION
         configuration:
+          affinityGroup: artifactoryTests
           inputSteps:
-             - name: Artifactory
+            - name: Artifactory
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -77,7 +77,6 @@ pipelines:
             - npm --version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
-
       # # Maven tests
       # - name: Maven
       #   <<: *COMMON_CONFIGURATION
@@ -88,7 +87,6 @@ pipelines:
       #       - mvn --version
       #       - *CREATE_RT_ACCESS_TOKEN
       #       - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.maven -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
-
       # # Gradle tests
       # - name: Gradle
       #   <<: *COMMON_CONFIGURATION
@@ -99,7 +97,6 @@ pipelines:
       #       - gradle --version
       #       - *CREATE_RT_ACCESS_TOKEN
       #       - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
-
       # # Go tests
       # - name: Go
       #   <<: *COMMON_CONFIGURATION
@@ -110,7 +107,6 @@ pipelines:
       #       - go version
       #       - *CREATE_RT_ACCESS_TOKEN
       #       - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
-
       # # Pip tests
       # - name: Pip
       #   <<: *COMMON_CONFIGURATION
@@ -121,7 +117,6 @@ pipelines:
       #       - pip --version
       #       - *CREATE_RT_ACCESS_TOKEN
       #       - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
-
       # # Distribution tests
       # - name: Distribution
       #   <<: *COMMON_CONFIGURATION
@@ -132,7 +127,6 @@ pipelines:
       #       - *CREATE_RT_ACCESS_TOKEN
       #       - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
       #       - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
-
       # # NuGet tests
       # - name: NuGet
       #   <<: *COMMON_CONFIGURATION
