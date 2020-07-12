@@ -57,8 +57,7 @@ pipelines:
       - name: Bintray
         <<: *COMMON_CONFIGURATION
         configuration:
-          inputSteps:
-             - name: Artifactory
+          affinityGroup: bintrayTest
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -70,7 +69,7 @@ pipelines:
         <<: *COMMON_CONFIGURATION
         configuration:
           inputSteps:
-             - name: Bintray
+             - name: Artifactory
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
