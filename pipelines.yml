@@ -56,7 +56,8 @@ pipelines:
       # Bintray tests
       - name: Bintray
         type: Bash
-        <<: *COMMON_CONFIGURATION
+        configuration:
+          <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
