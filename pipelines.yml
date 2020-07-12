@@ -45,7 +45,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: artifactoryTests
+          # affinityGroup: artifactoryTests
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -69,7 +69,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: artifactoryTests
+          # affinityGroup: artifactoryTests
           inputSteps:
             - name: Artifactory
         execution:
