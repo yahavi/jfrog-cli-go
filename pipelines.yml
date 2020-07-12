@@ -1,11 +1,9 @@
 # Set common JFrog integration and GitHub input source
 commonConfiguration: &COMMON_CONFIGURATION
-  type: Bash
-  configuration:
-    integrations:
-      - name: jfrog
-    inputResources:
-      - name: jfrogCliGit
+  integrations:
+    - name: jfrog
+  inputResources:
+    - name: jfrogCliGit
 
 # Create artifactory access token and save it in './rtToken'
 createRtAccessToken: &CREATE_RT_ACCESS_TOKEN ./build/build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800 | jq '.access_token' -r > rtToken
@@ -44,8 +42,9 @@ pipelines:
     steps:
       # Artifactory tests
       - name: Artifactory
-        <<: *COMMON_CONFIGURATION
+        type: Bash
         configuration:
+          <<: *COMMON_CONFIGURATION
           affinityGroup: artifactoryTests
         execution:
           <<: *UPDATE_COMMIT_STATUS
@@ -67,8 +66,9 @@ pipelines:
 
       # Npm tests
       - name: Npm
-        <<: *COMMON_CONFIGURATION
+        type: Bash
         configuration:
+          <<: *COMMON_CONFIGURATION
           affinityGroup: artifactoryTests
           inputSteps:
             - name: Artifactory
