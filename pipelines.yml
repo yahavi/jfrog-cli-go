@@ -2,6 +2,7 @@
 commonConfiguration: &COMMON_CONFIGURATION
   type: Bash
   configuration:
+    affinityGroup: artifactoryTests
     integrations:
       - name: jfrog
     inputResources:
