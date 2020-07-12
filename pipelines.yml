@@ -2,7 +2,6 @@
 commonConfiguration: &COMMON_CONFIGURATION
   type: Bash
   configuration:
-    affinityGroup: artifactoryTest
     integrations:
       - name: jfrog
     inputResources:
@@ -46,6 +45,8 @@ pipelines:
       # Artifactory tests
       - name: Artifactory
         <<: *COMMON_CONFIGURATION
+        configuration:
+          inputStep: Artifactory
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -65,6 +66,9 @@ pipelines:
       # Npm tests
       - name: Npm
         <<: *COMMON_CONFIGURATION
+        configuration:
+          inputSteps:
+             - name: Artifactory
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
