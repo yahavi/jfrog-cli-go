@@ -164,8 +164,6 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          runtime:
-            type: host
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
