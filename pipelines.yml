@@ -44,100 +44,99 @@ pipelines:
     steps:
       # Artifactory tests
       - name: Artifactory
-        args: &ARGS -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
         <<: *COMMON_CONFIGURATION
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
             - cd $res_jfrogCliGit_resourcePath
             - *CREATE_RT_ACCESS_TOKEN
-            - << : [*TEST_PREFIX, *ARGS]
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      # # Bintray tests
-      # - name: Bintray
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - << : [*TEST_PREFIX, -test.bintray -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey]
+      # Bintray tests
+      - name: Bintray
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.bintray -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey
 
-      # # Npm tests
-      # - name: Npm
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - npm --version
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - << : [*TEST_PREFIX, -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)]
+      # Npm tests
+      - name: Npm
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - npm --version
+            - *CREATE_RT_ACCESS_TOKEN
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      # # Maven tests
-      # - name: Maven
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - mvn --version
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - << : [*TEST_PREFIX, -test.maven -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)]
+      # Maven tests
+      - name: Maven
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - mvn --version
+            - *CREATE_RT_ACCESS_TOKEN
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.maven -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      # # Gradle tests
-      # - name: Gradle
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - gradle --version
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - << : [*TEST_PREFIX, -test.gradle -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)]
+      # Gradle tests
+      - name: Gradle
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - gradle --version
+            - *CREATE_RT_ACCESS_TOKEN
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      # # Go tests
-      # - name: Go
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - go version
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - << : [*TEST_PREFIX, -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)]
+      # Go tests
+      - name: Go
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - go version
+            - *CREATE_RT_ACCESS_TOKEN
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      # # Pip tests
-      # - name: Pip
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - pip --version
-      #       - python -m venv .venv
-      #       - source .venv/bin/activate
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - << : [*TEST_PREFIX, -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)]
+      # Pip tests
+      - name: Pip
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - pip --version
+            - python -m venv .venv
+            - source .venv/bin/activate
+            - *CREATE_RT_ACCESS_TOKEN
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      # # Distribution tests
-      # - name: Distribution
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
-      #       - << : [*TEST_PREFIX, -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)]
+      # Distribution tests
+      - name: Distribution
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - *CREATE_RT_ACCESS_TOKEN
+            - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
 
-      # # NuGet tests
-      # - name: NuGet
-      #   <<: *COMMON_CONFIGURATION
-      #   execution:
-      #     <<: *UPDATE_COMMIT_STATUS
-      #     onExecute:
-      #       - cd $res_jfrogCliGit_resourcePath
-      #       - nuget help 2>&1 | head -1
-      #       - apt install -yq dotnet-sdk-2.1
-      #       - *CREATE_RT_ACCESS_TOKEN
-      #       - << : [*TEST_PREFIX, -test.nuget -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)]
+      # NuGet tests
+      - name: NuGet
+        <<: *COMMON_CONFIGURATION
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - nuget help 2>&1 | head -1
+            - apt install -yq dotnet-sdk-2.1
+            - *CREATE_RT_ACCESS_TOKEN
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.nuget -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
