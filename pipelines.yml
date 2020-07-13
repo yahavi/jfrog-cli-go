@@ -24,7 +24,6 @@ resources:
       buildOn:
         pullRequestCreate: true
 
-
 pipelines:
   # Global configuration
   - name: test_cli
