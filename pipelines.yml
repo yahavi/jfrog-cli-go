@@ -38,6 +38,7 @@ pipelines:
         readOnly:
           GOPROXY: https://gocenter.io
           JFROG_CLI_OFFER_CONFIG: "false"
+          DOCKER_CLI_EXPERIMENTAL: "enabled"
 
     steps:
       # Repository creators tests - should run in serial
@@ -164,8 +165,6 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          environmentVariables:
-            DOCKER_CLI_EXPERIMENTAL: "enabled"
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
