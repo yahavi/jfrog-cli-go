@@ -40,7 +40,7 @@ pipelines:
           JFROG_CLI_OFFER_CONFIG: "false"
 
     steps:
-      # Repository creators tests - should run in serial
+      # Repository creators tests - should be running in serial
       - name: Artifactory
         type: Bash
         configuration:
@@ -108,20 +108,6 @@ pipelines:
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
-      - name: Distribution
-        type: Bash
-        configuration:
-          <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Pip
-        execution:
-          <<: *UPDATE_COMMIT_STATUS
-          onExecute:
-            - cd $res_jfrogCliGit_resourcePath
-            - *CREATE_RT_ACCESS_TOKEN
-            - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
-            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
-
       - name: Go
         type: Bash
         configuration:
@@ -135,6 +121,20 @@ pipelines:
             - go version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
+
+      - name: Distribution
+        type: Bash
+        configuration:
+          <<: *COMMON_CONFIGURATION
+          inputSteps:
+            - name: Go
+        execution:
+          <<: *UPDATE_COMMIT_STATUS
+          onExecute:
+            - cd $res_jfrogCliGit_resourcePath
+            - *CREATE_RT_ACCESS_TOKEN
+            - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
+            - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
 
       # Parallel tests
       - name: NuGet
