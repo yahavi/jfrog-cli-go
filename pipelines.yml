@@ -165,7 +165,7 @@ pipelines:
         configuration:
           <<: *COMMON_CONFIGURATION
           environmentVariables:
-            DOCKER_CLI_EXPERIMENTAL: "true"
+            DOCKER_CLI_EXPERIMENTAL: "enabled"
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
