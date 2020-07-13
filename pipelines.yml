@@ -20,7 +20,7 @@ resources:
     type: GitRepo
     configuration:
       path: yahavi/jfrog-cli
-      gitProvider: yahav_git_public
+      gitProvider: yahav_git_public2
       buildOn:
         pullRequestCreate: true
 
