@@ -37,7 +37,7 @@ pipelines:
       environmentVariables:
         readOnly:
           GOPROXY: https://gocenter.io
-          # JFROG_CLI_OFFER_CONFIG: "false"
+          CI: "true"
 
     steps:
       # Repository creators tests - should be running in serial
@@ -45,7 +45,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -57,7 +57,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -70,7 +70,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -83,7 +83,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -96,7 +96,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -109,7 +109,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -122,7 +122,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoryCreators
+          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
