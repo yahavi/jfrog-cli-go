@@ -45,6 +45,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -56,8 +57,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Artifactory
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -70,8 +70,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Npm
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -84,8 +83,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Maven
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -98,8 +96,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Gradle
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -112,8 +109,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Pip
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -126,8 +122,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          inputSteps:
-            - name: Go
+          affinityGroup: repositoryCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
