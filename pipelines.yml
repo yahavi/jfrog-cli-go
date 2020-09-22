@@ -19,8 +19,8 @@ resources:
   - name: jfrogCliGit
     type: GitRepo
     configuration:
-      path: jfrog/jfrog-cli
-      gitProvider: github
+      path: yahavi/jfrog-cli
+      gitProvider: yahav_github
       buildOn:
         pullRequestCreate: true
 
