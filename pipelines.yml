@@ -45,7 +45,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -57,7 +57,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -70,7 +70,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -83,7 +83,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -96,7 +96,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -109,7 +109,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -122,7 +122,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -135,7 +135,7 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
+          # affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
