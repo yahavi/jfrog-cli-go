@@ -26,7 +26,7 @@ resources:
 
 pipelines:
   # Global configuration
-  - name: test_cli
+  - name: yahav_test_cli
     configuration:
       runtime:
         type: image
