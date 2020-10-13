@@ -196,6 +196,39 @@ func getFilesFromBuildDir(t *testing.T, buildName, buildNumber string) []os.File
 	return files
 }
 
+func TestBuildAppend(t *testing.T) {
+	initArtifactoryTest(t)
+	buildNumber1 := "12"
+	buildNumber2 := "13"
+
+	// Clean old builds tests if exists
+	inttestutils.DeleteBuild(artifactoryDetails.Url, tests.RtBuildName1, artHttpDetails)
+	inttestutils.DeleteBuild(artifactoryDetails.Url, tests.RtBuildName2, artHttpDetails)
+
+	// Publish build RtBuildName2/buildNumber2
+	err := artifactoryCli.WithoutCredentials().Exec("bce", tests.RtBuildName2, buildNumber2)
+	assert.NoError(t, err)
+	err = artifactoryCli.Exec("bp", tests.RtBuildName2, buildNumber2)
+	assert.NoError(t, err)
+
+	// Create a build RtBuildName1/buildNumber1 and append RtBuildName2/buildNumber2 to the build info
+	err = artifactoryCli.Exec("ba", tests.RtBuildName1, buildNumber1, tests.RtBuildName2, buildNumber2)
+	assert.NoError(t, err)
+	err = artifactoryCli.Exec("bp", tests.RtBuildName1, buildNumber1)
+	assert.NoError(t, err)
+
+	// Check published build info
+	buildInfo, _ := inttestutils.GetBuildInfo(artifactoryDetails.Url, tests.RtBuildName1, buildNumber1, t, artHttpDetails)
+	assert.NotNil(t, buildInfo)
+	assert.Len(t, buildInfo.Modules, 1)
+	module := buildInfo.Modules[0]
+	assert.Equal(t, tests.RtBuildName2+"/"+buildNumber2, module.Id)
+
+	// Clean builds
+	inttestutils.DeleteBuild(artifactoryDetails.Url, tests.RtBuildName1, artHttpDetails)
+	inttestutils.DeleteBuild(artifactoryDetails.Url, tests.RtBuildName2, artHttpDetails)
+}
+
 func TestBuildAddDependencies(t *testing.T) {
 	initArtifactoryTest(t)
 	// Clean old build tests if exists

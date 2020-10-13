@@ -18,6 +18,7 @@ const (
 	Properties              = "properties"
 	Search                  = "search"
 	BuildPublish            = "build-publish"
+	BuildAppend             = "build-append"
 	BuildScan               = "build-scan"
 	BuildPromote            = "build-promote"
 	BuildDistribute         = "build-distribute"
@@ -1102,6 +1103,10 @@ var commandFlags = map[string][]string{
 		insecureTls,
 	},
 	BuildPublish: {
+		url, user, password, apikey, accessToken, sshPassPhrase, sshKeyPath, serverId, buildUrl, bpDryRun,
+		envInclude, envExclude, insecureTls,
+	},
+	BuildAppend: {
 		url, user, password, apikey, accessToken, sshPassPhrase, sshKeyPath, serverId, buildUrl, bpDryRun,
 		envInclude, envExclude, insecureTls,
 	},
