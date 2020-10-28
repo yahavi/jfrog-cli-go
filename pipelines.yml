@@ -3,7 +3,7 @@ commonConfiguration: &COMMON_CONFIGURATION
   integrations:
     - name: jfrog
   inputResources:
-    - name: yahav_github
+    - name: yahavjfrogCliGit
 
 # Create artifactory access token and save it in './rtToken'
 createRtAccessToken: &CREATE_RT_ACCESS_TOKEN ./build/build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800 | jq '.access_token' -r > rtToken
@@ -20,7 +20,7 @@ resources:
     type: GitRepo
     configuration:
       path: yahavi/jfrog-cli
-      gitProvider: github
+      gitProvider: yahav_github
       buildOn:
         pullRequestCreate: true
 
