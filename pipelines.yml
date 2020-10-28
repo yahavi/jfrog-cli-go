@@ -3,7 +3,7 @@ commonConfiguration: &COMMON_CONFIGURATION
   integrations:
     - name: jfrog
   inputResources:
-    - name: jfrogCliGit
+    - name: yahav_github
 
 # Create artifactory access token and save it in './rtToken'
 createRtAccessToken: &CREATE_RT_ACCESS_TOKEN ./build/build.sh && ./jfrog rt atc $int_jfrog_rt_user --url=$int_jfrog_rt_url --user=$int_jfrog_rt_user --password=$int_jfrog_rt_password --grant-admin --expiry 1800 | jq '.access_token' -r > rtToken
@@ -11,22 +11,22 @@ createRtAccessToken: &CREATE_RT_ACCESS_TOKEN ./build/build.sh && ./jfrog rt atc 
 # Update commit status in GitHub
 updateCommitStatus: &UPDATE_COMMIT_STATUS
   onStart:
-    - update_commit_status jfrogCliGit --context "$step_name"
+    - update_commit_status yahavjfrogCliGit --context "$step_name"
   onComplete:
-    - update_commit_status jfrogCliGit --context "$step_name"
+    - update_commit_status yahavjfrogCliGit --context "$step_name"
 
 resources:
-  - name: jfrogCliGit
+  - name: yahavjfrogCliGit
     type: GitRepo
     configuration:
-      path: jfrog/jfrog-cli
+      path: yahavi/jfrog-cli
       gitProvider: github
       buildOn:
         pullRequestCreate: true
 
 pipelines:
   # Global configuration
-  - name: test_cli
+  - name: yahav_test_cli
     configuration:
       runtime:
         type: image
@@ -45,11 +45,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.artifactory -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
 
@@ -57,11 +56,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - npm --version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.npm -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
@@ -70,7 +68,6 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
@@ -83,11 +80,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - gradle --version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.gradle -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
@@ -96,11 +92,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - pip --version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.pip -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
@@ -109,11 +104,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - go version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.go -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken)
@@ -122,11 +116,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - *CREATE_RT_ACCESS_TOKEN
             - curl -X POST -u $int_jfrog_rt_user:$int_jfrog_rt_password $int_jfrog_dist_url/api/v1/security/token -d "username=$int_jfrog_rt_user" -d 'expires_in=1800' | jq '.access_token' -r > distToken
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.distribution -rt.url=$int_jfrog_rt_url -rt.distUrl=$int_jfrog_dist_url -rt.accessToken=$(< rtToken) -rt.distAccessToken=$(< distToken)
@@ -135,11 +128,10 @@ pipelines:
         type: Bash
         configuration:
           <<: *COMMON_CONFIGURATION
-          affinityGroup: repositoriesCreators
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - docker version
             - *CREATE_RT_ACCESS_TOKEN
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME DOCKER_CLI_EXPERIMENTAL=enabled `which go` test -v -timeout 0 -test.docker -rt.url=$int_jfrog_rt_url -rt.accessToken=$(< rtToken) -rt.dockerRepoDomain=ecosysjfrog-docker-virtual.jfrog.io -rt.dockerVirtualRepo=docker-virtual -rt.dockerTargetRepo=docker-local -rt.dockerRemoteRepo=docker-remote
@@ -152,7 +144,7 @@ pipelines:
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - nuget help 2>&1 | head -1
             - apt install -yq dotnet-sdk-2.1
             - *CREATE_RT_ACCESS_TOKEN
@@ -165,7 +157,7 @@ pipelines:
         execution:
           <<: *UPDATE_COMMIT_STATUS
           onExecute:
-            - cd $res_jfrogCliGit_resourcePath
+            - cd $res_yahavjfrogCliGit_resourcePath
             - env -i PATH=$PATH M2_HOME=$M2_HOME HOME=$HOME `which go` test -v -timeout 0 -test.bintray -bt.user=$int_jfrog_bintray_user -bt.key=$int_jfrog_bintray_apikey
 
       # - name: Plugins
