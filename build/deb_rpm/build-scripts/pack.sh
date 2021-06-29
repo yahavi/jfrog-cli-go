@@ -87,7 +87,7 @@ createDEBPackage(){
 										sed -i -e 's|__VERSION__|'${JFROG_CLI_VERSION}'|g' ${DEB_IMAGE_ROOT_DIR}-build/debian/changelog && \
 										\
 										\
-										debuild -us -uc && \
+										debuild -us -uc --lintian-opts --profile jfrog && \
 										\
 										\
 										mkdir -p ${DEB_IMAGE_ROOT_DIR}/pkg && \
